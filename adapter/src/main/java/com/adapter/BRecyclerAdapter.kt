@@ -10,11 +10,11 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class BRecyclerAdapter<T : Any>(
-    context: Context,
-    private val viewHolderFactory: BViewHolderFactory
+        context: Context,
+        private val viewHolderFactory: BViewHolderFactory
 ) : RecyclerView.Adapter<BViewHolder<Any>>() {
     //保存列表项数据信息
-    private val viewTypeInfoList = HashMap<Class<*>, ViewTypeInfo>()
+    private val viewTypeInfoList = HashMap<Class<Any>, ViewTypeInfo>()
     //布局泵
     private val layoutInflater = LayoutInflater.from(context)
 
@@ -74,30 +74,15 @@ class BRecyclerAdapter<T : Any>(
         val item = items[itemPosition]
 
         val holder = viewHolderFactory.createViewHolder(layoutInflater, parent, item)
-            ?: throw IllegalArgumentException("Cannot find the view holder for item:$item")
+                ?: throw IllegalArgumentException("Cannot find the view holder for item:$item")
 
         val viewTypeInfo = getViewTypeInfo(item.javaClass)
 
         holder.setListeners(
-            View.OnClickListener {
-                onItemClick(
-                    it,
-                    holder.adapterPosition,
-                    viewTypeInfo,
-                    true,
-                    itemClickListener
-                )
-            },
-            View.OnLongClickListener {
-                onItemClick(
-                    it,
-                    holder.adapterPosition,
-                    viewTypeInfo,
-                    false,
-                    itemLongClickListener
-                )
-            }
+                View.OnClickListener { onItemClick(it, holder.adapterPosition, viewTypeInfo, true, itemClickListener) },
+                View.OnLongClickListener { onItemClick(it, holder.adapterPosition, viewTypeInfo, false, itemLongClickListener) }
         )
+
         return holder
     }
 
@@ -115,9 +100,9 @@ class BRecyclerAdapter<T : Any>(
     }
 
     override fun onBindViewHolder(
-        holder: BViewHolder<Any>,
-        position: Int,
-        payloads: MutableList<Any>
+            holder: BViewHolder<Any>,
+            position: Int,
+            payloads: MutableList<Any>
     ) {
         if (!viewHolderFactory.onBindViewHolder(holder, position, payloads)) {
             onBindViewHolder(holder, position)
@@ -135,11 +120,11 @@ class BRecyclerAdapter<T : Any>(
      * @return
      */
     private fun onItemClick(
-        v: View,
-        position: Int,
-        viewTypeInfo: ViewTypeInfo,
-        isClick: Boolean,
-        listener: OnDClickListener<T>?
+            v: View,
+            position: Int,
+            viewTypeInfo: ViewTypeInfo,
+            isClick: Boolean,
+            listener: OnDClickListener<T>?
     ): Boolean {
         if (position < 0 || position >= items.size) {
             return false
@@ -160,9 +145,9 @@ class BRecyclerAdapter<T : Any>(
      * @param longClickable
      */
     fun setViewType(
-        classType: Class<*>,
-        clickable: Boolean = true,
-        longClickable: Boolean = true
+            classType: Class<Any>,
+            clickable: Boolean = true,
+            longClickable: Boolean = true
     ): BRecyclerAdapter<T> {
         getViewTypeInfo(classType).apply {
             this.clickable = clickable
@@ -177,7 +162,7 @@ class BRecyclerAdapter<T : Any>(
      * @param classType
      * @return
      */
-    private fun getViewTypeInfo(classType: Class<*>): ViewTypeInfo {
+    private fun getViewTypeInfo(classType: Class<Any>): ViewTypeInfo {
         return viewTypeInfoList[classType] ?: ViewTypeInfo().apply {
             //没有找到对应ViewTypeInfo的话则添加默认ViewTypeInfo
             viewType = viewTypeInfoList.size

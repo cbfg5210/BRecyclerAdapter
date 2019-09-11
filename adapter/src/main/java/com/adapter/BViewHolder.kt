@@ -11,7 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
  * @param T : Any
  * @constructor
  */
-abstract class BViewHolder<T : Any>(inflater: LayoutInflater, parent: ViewGroup?, attachToRoot: Boolean, @LayoutRes layoutRes: Int) : RecyclerView.ViewHolder(inflater.inflate(layoutRes, parent, attachToRoot)) {
+abstract class BViewHolder<T : Any>(inflater: LayoutInflater,
+                                    parent: ViewGroup?,
+                                    attachToRoot: Boolean,
+                                    @LayoutRes layoutRes: Int) : RecyclerView.ViewHolder(inflater.inflate(layoutRes, parent, attachToRoot)) {
 
     abstract fun setContents(item: T, selectable: Boolean)
 
