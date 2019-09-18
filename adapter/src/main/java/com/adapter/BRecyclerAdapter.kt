@@ -13,7 +13,7 @@ class BRecyclerAdapter<T : Any>(
         private val viewHolderFactory: BViewHolderFactory
 ) : RecyclerView.Adapter<BViewHolder<Any>>() {
     //保存列表项数据信息
-    private val viewTypeInfoList = HashMap<Class<Any>, ViewTypeInfo>()
+    private val viewTypeMap = HashMap<Class<Any>, Int>()
     //布局泵
     private val layoutInflater = LayoutInflater.from(context)
 
@@ -82,7 +82,7 @@ class BRecyclerAdapter<T : Any>(
     override fun getItemViewType(position: Int): Int {
         itemPosition = position
         val type = viewHolderFactory.getItemViewType(items[position])
-        return if (type != -1) type else getViewTypeInfo(items[position].javaClass).viewType
+        return if (type != -1) type else getViewType(items[position].javaClass)
     }
 
     override fun onBindViewHolder(holder: BViewHolder<Any>, position: Int) {
@@ -108,23 +108,17 @@ class BRecyclerAdapter<T : Any>(
     }
 
     /**
-     * 获取item ViewTypeInfo
+     * 获取item ViewType
      *
      * @param classType
      * @return
      */
-    private fun getViewTypeInfo(classType: Class<Any>): ViewTypeInfo {
-        return viewTypeInfoList[classType] ?: ViewTypeInfo().apply {
-            //没有找到对应ViewTypeInfo的话则添加默认ViewTypeInfo
-            viewType = viewTypeInfoList.size
-            viewTypeInfoList[classType] = this
+    private fun getViewType(classType: Class<Any>): Int {
+        var viewType = viewTypeMap[classType]
+        if (viewType == null) {
+            viewType = viewTypeMap.size
+            viewTypeMap[classType] = viewType
         }
-    }
-
-    /**
-     * 存储ViewType数据
-     */
-    private inner class ViewTypeInfo {
-        internal var viewType: Int = 0
+        return viewType
     }
 }
