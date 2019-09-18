@@ -14,17 +14,6 @@ import android.view.ViewGroup
  */
 abstract class BViewHolderFactory {
     /**
-     * 需要对item项进行部分更新的话使用
-     * @see  BRecyclerAdapter.onBindViewHolder(holder: BViewHolder<Any>, position: Int, payloads: MutableList<Any>)
-     *
-     * @param holder BViewHolder<Any>
-     * @param position Int
-     * @param payloads MutableList<Any>
-     * @return Boolean 覆写了这个方法的话，请返回true
-     */
-    fun onBindViewHolder(holder: BViewHolder<Any>, position: Int, payloads: MutableList<Any>): Boolean = false
-
-    /**
      * 生成ViewHolder
      *
      * @param inflater LayoutInflater
@@ -32,7 +21,7 @@ abstract class BViewHolderFactory {
      * @param item Any
      * @return BViewHolder<Any>?
      */
-    abstract fun createViewHolder(inflater: LayoutInflater, parent: ViewGroup?, item: Any): BViewHolder<Any>?
+    abstract fun createViewHolder(inflater: LayoutInflater, parent: ViewGroup?, item: Any): BViewHolder<Any>
 
     /**
      * 如果要根据item的某个属性来决定布局，需要重写这个方法，在

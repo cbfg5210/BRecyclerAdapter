@@ -13,17 +13,13 @@ import androidx.recyclerview.widget.RecyclerView
  */
 abstract class BViewHolder<T : Any>(inflater: LayoutInflater,
                                     parent: ViewGroup?,
-                                    attachToRoot: Boolean,
-                                    @LayoutRes layoutRes: Int) : RecyclerView.ViewHolder(inflater.inflate(layoutRes, parent, attachToRoot)) {
+                                    @LayoutRes layoutRes: Int,
+                                    attachToRoot: Boolean = false) : RecyclerView.ViewHolder(inflater.inflate(layoutRes, parent, attachToRoot)) {
 
-    abstract fun setContents(item: T, selectable: Boolean)
+    abstract fun setContents(item: T, payloads: MutableList<Any>?)
 
     open fun setListeners(clickListener: View.OnClickListener, longClickListener: View.OnLongClickListener) {
         itemView.setOnClickListener(clickListener)
         itemView.setOnLongClickListener(longClickListener)
-    }
-
-    open fun setSelected(isSelected: Boolean) {
-        itemView.isSelected = isSelected
     }
 }

@@ -72,11 +72,8 @@ class BRecyclerAdapter<T : Any>(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BViewHolder<Any> {
         val item = items[itemPosition]
-
-        val holder = viewHolderFactory.createViewHolder(layoutInflater, parent, item)
-                ?: throw IllegalArgumentException("Cannot find the view holder for item:$item")
-
         val viewTypeInfo = getViewTypeInfo(item.javaClass)
+        val holder = viewHolderFactory.createViewHolder(layoutInflater, parent, item)
 
         holder.setListeners(
                 View.OnClickListener { onItemClick(it, holder.adapterPosition, viewTypeInfo, true, itemClickListener) },
@@ -96,7 +93,7 @@ class BRecyclerAdapter<T : Any>(
 
     override fun onBindViewHolder(holder: BViewHolder<Any>, position: Int) {
         val item = items[position]
-        holder.setContents(item, false)
+        holder.setContents(item, null)
     }
 
     override fun onBindViewHolder(
@@ -104,9 +101,8 @@ class BRecyclerAdapter<T : Any>(
             position: Int,
             payloads: MutableList<Any>
     ) {
-        if (!viewHolderFactory.onBindViewHolder(holder, position, payloads)) {
-            onBindViewHolder(holder, position)
-        }
+        val item = items[position]
+        holder.setContents(item, payloads)
     }
 
     /**
