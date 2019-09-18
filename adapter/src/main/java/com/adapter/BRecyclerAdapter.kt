@@ -67,28 +67,11 @@ class BRecyclerAdapter<T : Any>(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BViewHolder<Any> {
         val item = items[itemPosition]
-        val viewTypeInfo = getViewTypeInfo(item.javaClass)
         val holder = viewHolderFactory.createViewHolder(layoutInflater, parent, item)
 
-        /*holder.setListeners(
-                View.OnClickListener { onItemClick(it, holder.adapterPosition, viewTypeInfo, true, itemClickListener) },
-                View.OnLongClickListener { onItemClick(it, holder.adapterPosition, viewTypeInfo, false, itemLongClickListener) }
-        )*/
-
         holder.setListeners(
-                View.OnClickListener { v ->
-                    val position = holder.adapterPosition
-                    if (viewTypeInfo.clickable && position >= 0 && position < items.size) {
-                        itemClickListener?.run { this(v, items[position], position) }
-                    }
-                },
-                View.OnLongClickListener { v ->
-                    val position = holder.adapterPosition
-                    if (viewTypeInfo.longClickable && position >= 0 && position < items.size) {
-                        itemLongClickListener?.run { this(v, items[position], position) }
-                    }
-                    true
-                }
+                View.OnClickListener { v -> onItemClick(holder, v, itemClickListener) },
+                View.OnLongClickListener { v -> onItemClick(holder, v, itemLongClickListener) }
         )
 
         return holder
@@ -116,23 +99,12 @@ class BRecyclerAdapter<T : Any>(
         holder.setContents(item, payloads)
     }
 
-    /**
-     * 设置view type
-     *
-     * @param classType
-     * @param clickable
-     * @param longClickable
-     */
-    fun setViewType(
-            classType: Class<Any>,
-            clickable: Boolean = true,
-            longClickable: Boolean = true
-    ): BRecyclerAdapter<T> {
-        getViewTypeInfo(classType).apply {
-            this.clickable = clickable
-            this.longClickable = longClickable
+    private fun onItemClick(holder: BViewHolder<Any>, v: View, clicker: ((view: View, item: T, position: Int) -> Unit)?): Boolean {
+        val position = holder.adapterPosition
+        if (position >= 0 && position < items.size) {
+            clicker?.run { this(v, items[position], position) }
         }
-        return this
+        return true
     }
 
     /**
@@ -145,8 +117,6 @@ class BRecyclerAdapter<T : Any>(
         return viewTypeInfoList[classType] ?: ViewTypeInfo().apply {
             //没有找到对应ViewTypeInfo的话则添加默认ViewTypeInfo
             viewType = viewTypeInfoList.size
-            clickable = true
-            longClickable = true
             viewTypeInfoList[classType] = this
         }
     }
@@ -156,7 +126,5 @@ class BRecyclerAdapter<T : Any>(
      */
     private inner class ViewTypeInfo {
         internal var viewType: Int = 0
-        internal var clickable: Boolean = false
-        internal var longClickable: Boolean = false
     }
 }
