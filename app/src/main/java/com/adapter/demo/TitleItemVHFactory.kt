@@ -19,15 +19,15 @@ import kotlinx.android.synthetic.main.item_text.view.*
 class TitleItemVHFactory : BViewHolderFactory() {
 
     override fun createViewHolder(
-        inflater: LayoutInflater,
-        parent: ViewGroup?,
-        item: Any
+            inflater: LayoutInflater,
+            parent: ViewGroup?,
+            item: Any
     ): BViewHolder<Any> {
         return TitleItemVH(inflater, parent) as BViewHolder<Any>
     }
 
-    internal inner class TitleItemVH(inflater: LayoutInflater, parent: ViewGroup?) :
-        BViewHolder<TitleItem>(inflater, parent, R.layout.item_text) {
+    private inner class TitleItemVH(inflater: LayoutInflater, parent: ViewGroup?) :
+            BViewHolder<TitleItem>(inflater, parent, R.layout.item_text) {
 
         override fun setContents(item: TitleItem, payloads: MutableList<Any>?) {
             itemView.tvText.text = item.title

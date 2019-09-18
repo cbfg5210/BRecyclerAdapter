@@ -1,11 +1,9 @@
 package com.adapter.demo
 
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.adapter.BRecyclerAdapter
-import com.adapter.OnDClickListener
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -17,16 +15,8 @@ class MainActivity : AppCompatActivity() {
         BRecyclerAdapter<TitleItem>(this, TitleItemVHFactory())
                 .bindRecyclerView(rvTest)
                 .setItems(getItems())
-                .setItemClickListener(object : OnDClickListener<TitleItem> {
-                    override fun onClick(view: View, item: TitleItem, position: Int) {
-                        Toast.makeText(this@MainActivity, "click item:${item.title}", Toast.LENGTH_SHORT).show()
-                    }
-                })
-                .setItemLongClickListener(object : OnDClickListener<TitleItem> {
-                    override fun onClick(view: View, item: TitleItem, position: Int) {
-                        Toast.makeText(this@MainActivity, "long click item:${item.title}", Toast.LENGTH_SHORT).show()
-                    }
-                })
+                .setItemClickListener { _, item, _ -> Toast.makeText(this@MainActivity, "click item:${item.title}", Toast.LENGTH_SHORT).show() }
+                .setItemLongClickListener { _, item, _ -> Toast.makeText(this@MainActivity, "long click item:${item.title}", Toast.LENGTH_SHORT).show() }
     }
 
     private fun getItems(): List<TitleItem> {

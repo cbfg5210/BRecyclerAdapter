@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.Nullable
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 import kotlin.collections.ArrayList
@@ -22,8 +21,8 @@ class BRecyclerAdapter<T : Any>(
         private set
 
     //点击、长按事件
-    private var itemClickListener: OnDClickListener<T>? = null
-    private var itemLongClickListener: OnDClickListener<T>? = null
+    private var itemClickListener: ((view: View, item: T, position: Int) -> Unit)? = null
+    private var itemLongClickListener: ((view: View, item: T, position: Int) -> Unit)? = null
 
     //记录调用 @see getItemViewType() 时的position
     private var itemPosition: Int = 0
@@ -51,22 +50,18 @@ class BRecyclerAdapter<T : Any>(
     }
 
     /**
-     * 设置item views点击事件
-     *
-     * @param listener
+     * 设置 item view 点击事件
      */
-    fun setItemClickListener(@Nullable listener: OnDClickListener<T>): BRecyclerAdapter<T> {
-        this.itemClickListener = listener
+    fun setItemClickListener(itemClicker: (view: View, item: T, position: Int) -> Unit): BRecyclerAdapter<T> {
+        this.itemClickListener = itemClicker
         return this
     }
 
     /**
-     * 设置item views长按事件
-     *
-     * @param listener
+     * 设置 item view 长按事件
      */
-    fun setItemLongClickListener(@Nullable listener: OnDClickListener<T>): BRecyclerAdapter<T> {
-        this.itemLongClickListener = listener
+    fun setItemLongClickListener(itemLongClicker: (view: View, item: T, position: Int) -> Unit): BRecyclerAdapter<T> {
+        this.itemLongClickListener = itemLongClicker
         return this
     }
 
@@ -75,9 +70,25 @@ class BRecyclerAdapter<T : Any>(
         val viewTypeInfo = getViewTypeInfo(item.javaClass)
         val holder = viewHolderFactory.createViewHolder(layoutInflater, parent, item)
 
-        holder.setListeners(
+        /*holder.setListeners(
                 View.OnClickListener { onItemClick(it, holder.adapterPosition, viewTypeInfo, true, itemClickListener) },
                 View.OnLongClickListener { onItemClick(it, holder.adapterPosition, viewTypeInfo, false, itemLongClickListener) }
+        )*/
+
+        holder.setListeners(
+                View.OnClickListener { v ->
+                    val position = holder.adapterPosition
+                    if (viewTypeInfo.clickable && position >= 0 && position < items.size) {
+                        itemClickListener?.run { this(v, items[position], position) }
+                    }
+                },
+                View.OnLongClickListener { v ->
+                    val position = holder.adapterPosition
+                    if (viewTypeInfo.longClickable && position >= 0 && position < items.size) {
+                        itemLongClickListener?.run { this(v, items[position], position) }
+                    }
+                    true
+                }
         )
 
         return holder
@@ -103,34 +114,6 @@ class BRecyclerAdapter<T : Any>(
     ) {
         val item = items[position]
         holder.setContents(item, payloads)
-    }
-
-    /**
-     * 点击/长按处理
-     *
-     * @param v
-     * @param position
-     * @param viewTypeInfo
-     * @param isClick 是否是点击：true-单击，false-长按
-     * @param listener
-     * @return
-     */
-    private fun onItemClick(
-            v: View,
-            position: Int,
-            viewTypeInfo: ViewTypeInfo,
-            isClick: Boolean,
-            listener: OnDClickListener<T>?
-    ): Boolean {
-        if (position < 0 || position >= items.size) {
-            return false
-        }
-        if (isClick) {
-            if (viewTypeInfo.clickable) listener?.onClick(v, items[position], position)
-        } else {
-            if (viewTypeInfo.longClickable) listener?.onClick(v, items[position], position)
-        }
-        return true
     }
 
     /**
