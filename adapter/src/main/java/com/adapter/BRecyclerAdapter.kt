@@ -67,7 +67,7 @@ class BRecyclerAdapter<T : Any>(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BViewHolder<Any> {
         val item = items[itemPosition]
-        val holder = viewHolderFactory.createViewHolder(layoutInflater, parent, item)
+        val holder = viewHolderFactory.createViewHolder(layoutInflater, parent, item) as BViewHolder<Any>
 
         holder.setListeners(
                 View.OnClickListener { v -> onItemClick(holder, v, itemClickListener) },
@@ -99,7 +99,11 @@ class BRecyclerAdapter<T : Any>(
         holder.setContents(item, payloads)
     }
 
-    private fun onItemClick(holder: BViewHolder<Any>, v: View, clicker: ((view: View, item: T, position: Int) -> Unit)?): Boolean {
+    private fun onItemClick(
+            holder: BViewHolder<Any>,
+            v: View,
+            clicker: ((view: View, item: T, position: Int) -> Unit)?
+    ): Boolean {
         val position = holder.adapterPosition
         if (position >= 0 && position < items.size) {
             clicker?.run { this(v, items[position], position) }

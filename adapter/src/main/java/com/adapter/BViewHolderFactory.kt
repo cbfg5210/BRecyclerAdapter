@@ -21,7 +21,7 @@ abstract class BViewHolderFactory {
      * @param item Any
      * @return BViewHolder<Any>?
      */
-    abstract fun createViewHolder(inflater: LayoutInflater, parent: ViewGroup?, item: Any): BViewHolder<Any>
+    abstract fun createViewHolder(inflater: LayoutInflater, parent: ViewGroup?, item: Any): BViewHolder<out Any>
 
     /**
      * 如果要根据item的某个属性来决定布局，需要重写这个方法，在

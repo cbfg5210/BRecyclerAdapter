@@ -22,8 +22,8 @@ class TitleItemVHFactory : BViewHolderFactory() {
             inflater: LayoutInflater,
             parent: ViewGroup?,
             item: Any
-    ): BViewHolder<Any> {
-        return TitleItemVH(inflater, parent) as BViewHolder<Any>
+    ): BViewHolder<out Any> {
+        return TitleItemVH(inflater, parent)
     }
 
     private inner class TitleItemVH(inflater: LayoutInflater, parent: ViewGroup?) :
