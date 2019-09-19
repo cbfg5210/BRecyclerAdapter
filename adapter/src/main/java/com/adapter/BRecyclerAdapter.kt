@@ -24,7 +24,7 @@ class BRecyclerAdapter<T : Any>(
     var items: MutableList<T> = ArrayList()
         private set
     //选中项列表
-    val selections = ArrayList<Any>()
+    val selections = ArrayList<T>()
 
     //点击、长按事件
     private var itemClickListener: ((view: View, item: T, position: Int) -> Unit)? = null
@@ -63,8 +63,28 @@ class BRecyclerAdapter<T : Any>(
      * 添加默认选中项
      */
     fun addSelection(item: T): BRecyclerAdapter<T> {
-        this.selections.add(item)
+        selections.add(item)
         return this
+    }
+
+    /**
+     * 选中全部
+     */
+    fun selectAll() {
+        if (items.size > 0) {
+            selections.addAll(items)
+            notifyItemRangeChanged(0, items.size, FLAG_PAYLOADS_SELECT)
+        }
+    }
+
+    /**
+     * 全部取消选中
+     */
+    fun deselectAll() {
+        if (selections.size > 0) {
+            selections.clear()
+            notifyItemRangeChanged(0, items.size, FLAG_PAYLOADS_DESELECT)
+        }
     }
 
     /**
@@ -191,9 +211,10 @@ class BRecyclerAdapter<T : Any>(
                 if (selections.contains(item)) {
                     selections.remove(item)
                     notifyItemChanged(position, FLAG_PAYLOADS_DESELECT)
+                } else {
+                    selections.add(item)
+                    notifyItemChanged(position, FLAG_PAYLOADS_SELECT)
                 }
-                selections.add(item)
-                notifyItemChanged(position, FLAG_PAYLOADS_SELECT)
             } else if (!selections.contains(item)) {
                 //单选
                 //还没选中过该项
