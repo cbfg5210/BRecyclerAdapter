@@ -1,6 +1,7 @@
 package com.adapter.demo.simple
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.adapter.BViewHolder
 import com.adapter.BViewHolderFactory
@@ -34,6 +35,26 @@ class SimpleVHFactory : BViewHolderFactory() {
         override fun setContents(item: RankItem, payloads: MutableList<Any>?) {
             itemView.ivIcon.setImageResource(R.mipmap.ic_launcher)
             itemView.tvRank.text = item.rank.toString()
+        }
+
+        /*
+         * 默认会给 itemView 设置点击和长按事件,
+         * 如果需要给除 itemView 外的 view 设置点击/长按事件则需要重写以下方法,
+         * 否则不用重写以下方法
+         */
+        override fun setListeners(clickListener: View.OnClickListener, longClickListener: View.OnLongClickListener) {
+            //默认给 itemView 设置点击和长按事件,如果不需要可以去掉以下一句
+            super.setListeners(clickListener, longClickListener)
+
+            //给 icon 设置点击事件
+            itemView.ivIcon.setOnClickListener(clickListener)
+            ////给 icon 设置长按事件
+            //itemView.ivIcon.setOnLongClickListener(longClickListener)
+
+            //给 rank 设置点击事件
+            itemView.tvRank.setOnClickListener(clickListener)
+            ////给 rank 设置长按事件
+            //itemView.tvRank.setOnLongClickListener(longClickListener)
         }
     }
 }

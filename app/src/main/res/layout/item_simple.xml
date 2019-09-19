@@ -20,7 +20,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:gravity="center"
+        android:padding="10dp"
         android:textSize="18sp"
+        tools:background="@color/colorPrimary"
         tools:text="Hello World!!!" />
 
 </LinearLayout>

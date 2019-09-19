@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.adapter.BRecyclerAdapter
-import com.adapter.demo.RankItem
 import com.adapter.demo.R
+import com.adapter.demo.RankItem
 import kotlinx.android.synthetic.main.fragment_list.view.*
 
 class SimpleFragment : Fragment() {
@@ -25,8 +25,14 @@ class SimpleFragment : Fragment() {
         BRecyclerAdapter<RankItem>(context!!, SimpleVHFactory())
                 .bindRecyclerView(layout.rvTest)
                 .setItems(getItems())
-                .setItemClickListener { _, item, _ -> Toast.makeText(activity, "点击了:${item.rank}", Toast.LENGTH_SHORT).show() }
-                .setItemLongClickListener { _, item, _ -> Toast.makeText(activity, "长按了:${item.rank}", Toast.LENGTH_SHORT).show() }
+                .setItemLongClickListener { _, _, position -> Toast.makeText(activity, "长按了 ItemView, position=$position", Toast.LENGTH_SHORT).show() }
+                .setItemClickListener { view, item, position ->
+                    when (view.id) {
+                        R.id.ivIcon -> Toast.makeText(activity, "点击了 Icon, position=$position", Toast.LENGTH_SHORT).show()
+                        R.id.tvRank -> Toast.makeText(activity, "点击了 Rank, position=$position", Toast.LENGTH_SHORT).show()
+                        else -> Toast.makeText(activity, "点击了 ItemView, position=$position", Toast.LENGTH_SHORT).show()
+                    }
+                }
 
         return layout
     }
