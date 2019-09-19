@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.adapter.demo.payloads.PayloadsFragment
 import com.adapter.demo.select_mix.MixSelectFragment
+import com.adapter.demo.select_multi.MultiSelectFragment
 import com.adapter.demo.select_single.SingleSelectFragment
 import com.adapter.demo.simple.SimpleFragment
 
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity() {
             FLAG_DEMO_SIMPLE -> SimpleFragment()
             FLAG_DEMO_PAYLOADS -> PayloadsFragment()
             FLAG_DEMO_SELECT_SINGLE -> SingleSelectFragment()
+            FLAG_DEMO_SELECT_MULTI -> MultiSelectFragment()
             FLAG_DEMO_SELECT_MIX -> MixSelectFragment()
             else -> return
         }
@@ -56,6 +58,7 @@ class MainActivity : AppCompatActivity() {
             R.id.menu_demo_simple -> showFragment(FLAG_DEMO_SIMPLE)
             R.id.menu_demo_payloads -> showFragment(FLAG_DEMO_PAYLOADS)
             R.id.menu_demo_select_single -> showFragment(FLAG_DEMO_SELECT_SINGLE)
+            R.id.menu_demo_select_multi -> showFragment(FLAG_DEMO_SELECT_MULTI)
             R.id.menu_demo_select_mix -> showFragment(FLAG_DEMO_SELECT_MIX)
         }
         return true

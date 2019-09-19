@@ -12,6 +12,9 @@
         android:id="@+id/menu_demo_select_single"
         android:title="Select - single" />
     <item
+        android:id="@+id/menu_demo_select_multi"
+        android:title="Select - multi" />
+    <item
         android:id="@+id/menu_demo_select_mix"
         android:title="Select - mix" />
 </menu>
