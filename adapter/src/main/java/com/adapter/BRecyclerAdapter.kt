@@ -17,8 +17,8 @@ class BRecyclerAdapter<T : Any>(
         const val FLAG_PAYLOADS_DESELECT = 10102
     }
 
-    //保存列表项 ViewType 信息
-    private val viewTypeMap = HashMap<Class<Any>, Int>()
+    //保存列表项信息
+    private val itemInfoMap = HashMap<Class<Any>, ItemInfo>()
     private val layoutInflater = LayoutInflater.from(context)
 
     var items: MutableList<T> = ArrayList()
@@ -96,7 +96,7 @@ class BRecyclerAdapter<T : Any>(
     override fun getItemViewType(position: Int): Int {
         itemPosition = position
         val type = viewHolderFactory.getItemViewType(items[position])
-        return if (type != -1) type else getViewType(items[position].javaClass)
+        return if (type != -1) type else getItemInfo(items[position].javaClass).viewType
     }
 
     override fun onBindViewHolder(holder: BViewHolder<Any>, position: Int) {
@@ -164,12 +164,15 @@ class BRecyclerAdapter<T : Any>(
      * @param classType
      * @return
      */
-    private fun getViewType(classType: Class<Any>): Int {
-        var viewType = viewTypeMap[classType]
-        if (viewType == null) {
-            viewType = viewTypeMap.size
-            viewTypeMap[classType] = viewType
-        }
-        return viewType
+    private fun getItemInfo(classType: Class<Any>): ItemInfo {
+        return itemInfoMap[classType]
+                ?: ItemInfo(itemInfoMap.size).apply { itemInfoMap[classType] = this }
     }
+
+    /**
+     * 存储 Item 属性数据
+     */
+    private data class ItemInfo(var viewType: Int = 0,
+                                var selectable: Boolean = false,
+                                var multiSelectable: Boolean = false)
 }
