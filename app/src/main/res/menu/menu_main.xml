@@ -9,6 +9,6 @@
         android:id="@+id/menu_demo_payloads"
         android:title="Payloads" />
     <item
-        android:id="@+id/menu_demo3"
-        android:title="Demo_3" />
+        android:id="@+id/menu_demo_select"
+        android:title="Select" />
 </menu>

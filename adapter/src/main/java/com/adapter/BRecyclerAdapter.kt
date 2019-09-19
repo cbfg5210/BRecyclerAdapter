@@ -24,6 +24,8 @@ class BRecyclerAdapter<T : Any>(
     private var itemClickListener: ((view: View, item: T, position: Int) -> Unit)? = null
     private var itemLongClickListener: ((view: View, item: T, position: Int) -> Unit)? = null
 
+    private var itemPicker: ItemPicker<T>? = null
+
     //记录调用 @see getItemViewType() 时的position
     private var itemPosition: Int = 0
 
@@ -46,6 +48,14 @@ class BRecyclerAdapter<T : Any>(
      */
     fun bindRecyclerView(recyclerView: RecyclerView): BRecyclerAdapter<T> {
         recyclerView.adapter = this
+        return this
+    }
+
+    /**
+     * 设置项选择器
+     */
+    fun setItemPicker(itemPicker: ItemPicker<T>): BRecyclerAdapter<T> {
+        this.itemPicker = itemPicker
         return this
     }
 
@@ -106,7 +116,36 @@ class BRecyclerAdapter<T : Any>(
     ): Boolean {
         val position = holder.adapterPosition
         if (position >= 0 && position < items.size) {
-            clicker?.run { this(v, items[position], position) }
+            val item = items[position]
+
+            //选中/取消选中回调
+            itemPicker?.run {
+                if (!this.isSelectable(item)) {
+                    return@run
+                }
+                if (this.isSelected(item)) {
+                    if (!this.isSingleSelectable(item)) {
+                        this.deselect(item)
+                        notifyItemChanged(position)
+                    }
+                } else {
+                    if (this.isSingleSelectable(item)) {
+                        val currentSelection = this.getCurrentSelection(items)
+                        if (currentSelection != null) {
+                            this.deselect(currentSelection)
+                            val index = items.indexOf(currentSelection)
+                            if (index != -1) {
+                                notifyItemChanged(index)
+                            }
+                        }
+                    }
+                    this.select(item)
+                    notifyItemChanged(position)
+                }
+            }
+
+            //点击/长按回调
+            clicker?.run { this(v, item, position) }
         }
         return true
     }
