@@ -10,5 +10,5 @@
         android:title="Payloads" />
     <item
         android:id="@+id/menu_demo_select"
-        android:title="Select" />
+        android:title="Select - mix" />
 </menu>

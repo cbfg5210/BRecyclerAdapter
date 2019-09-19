@@ -8,7 +8,7 @@ import com.adapter.BViewHolderFactory
 import com.adapter.ItemPicker
 import com.adapter.demo.R
 import com.adapter.demo.RankItem
-import kotlinx.android.synthetic.main.item_select.view.*
+import kotlinx.android.synthetic.main.item_select_mix.view.*
 import kotlinx.android.synthetic.main.item_simple.view.ivIcon
 import kotlinx.android.synthetic.main.item_simple.view.tvRank
 
@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.item_simple.view.tvRank
  * 修改时间：2018/7/24 9:45
  * 修改内容：
  */
-class SelectVHFactory : BViewHolderFactory(), ItemPicker<RankItem> {
+class MixSelectVHFactory : BViewHolderFactory(), ItemPicker<RankItem> {
     val selectedItems = ArrayList<RankItem>()
 
     // 是否可选,如果不可选的话清空 selectedItems
@@ -75,7 +75,7 @@ class SelectVHFactory : BViewHolderFactory(), ItemPicker<RankItem> {
     }
 
     private inner class RankItemVH(inflater: LayoutInflater, parent: ViewGroup?) :
-            BViewHolder<RankItem>(inflater, parent, R.layout.item_select) {
+            BViewHolder<RankItem>(inflater, parent, R.layout.item_select_mix) {
 
         private fun updateSelectableState() {
             if (isRankItemSelectable) {
