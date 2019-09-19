@@ -22,7 +22,7 @@ class SingleSelectFragment : Fragment() {
     ): View? {
         val layout = inflater.inflate(R.layout.fragment_list_select_single, container, false)
 
-        layout.tvDesc.text = "不可选/单选/多选 切换 Demo。\n\nRecyclerView："
+        layout.tvDesc.text = "单选 Demo。\n\nRecyclerView："
 
         vhFactory = SingleSelectVHFactory()
         adapter = BRecyclerAdapter<RankItem>(context!!, vhFactory)

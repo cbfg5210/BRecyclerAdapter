@@ -40,7 +40,7 @@ class MixSelectFragment : Fragment() {
                 R.id.rbNoSelection -> {
                     tvSelections.text = ""
                     vhFactory.isRankItemSelectable = false
-                    adapter.notifyItemRangeChanged(0, adapter.itemCount, 1)
+                    adapter.notifyItemRangeChanged(0, adapter.itemCount, MixSelectVHFactory.FLAG_SELECTABLE_CHANGED)
 
                     layout.cbToggleSelectAll.visibility = View.GONE
                 }
@@ -48,7 +48,7 @@ class MixSelectFragment : Fragment() {
                 R.id.rbSingleSelection -> {
                     vhFactory.isRankItemSelectable = true
                     vhFactory.isRankItemSingleSelectable = true
-                    adapter.notifyItemRangeChanged(0, adapter.itemCount, 1)
+                    adapter.notifyItemRangeChanged(0, adapter.itemCount, MixSelectVHFactory.FLAG_SELECTABLE_CHANGED)
 
                     layout.cbToggleSelectAll.visibility = View.GONE
                 }
@@ -56,7 +56,7 @@ class MixSelectFragment : Fragment() {
                 R.id.rbMultiSelection -> {
                     vhFactory.isRankItemSelectable = true
                     vhFactory.isRankItemSingleSelectable = false
-                    adapter.notifyItemRangeChanged(0, adapter.itemCount, 1)
+                    adapter.notifyItemRangeChanged(0, adapter.itemCount, MixSelectVHFactory.FLAG_SELECTABLE_CHANGED)
 
                     layout.cbToggleSelectAll.visibility = View.VISIBLE
                 }

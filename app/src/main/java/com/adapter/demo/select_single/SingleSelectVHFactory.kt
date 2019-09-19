@@ -59,7 +59,7 @@ class SingleSelectVHFactory : BViewHolderFactory(), ItemPicker<RankItem> {
 
         override fun setContents(item: RankItem, payloads: MutableList<Any>?) {
             if (payloads != null && payloads.isNotEmpty()) {
-
+                itemView.rbSelect.isChecked = isSelected(item)
             } else {
                 itemView.ivIcon.setImageResource(R.mipmap.ic_launcher)
                 itemView.tvRank.text = item.rank.toString()

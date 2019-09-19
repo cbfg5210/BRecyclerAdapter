@@ -3,6 +3,7 @@ package com.adapter.demo.select_mix
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.adapter.BRecyclerAdapter
 import com.adapter.BViewHolder
 import com.adapter.BViewHolderFactory
 import com.adapter.ItemPicker
@@ -22,6 +23,10 @@ import kotlinx.android.synthetic.main.item_simple.view.tvRank
  * 修改内容：
  */
 class MixSelectVHFactory : BViewHolderFactory(), ItemPicker<RankItem> {
+    companion object {
+        const val FLAG_SELECTABLE_CHANGED = 1
+    }
+
     val selectedItems = ArrayList<RankItem>()
 
     // 是否可选,如果不可选的话清空 selectedItems
@@ -94,21 +99,34 @@ class MixSelectVHFactory : BViewHolderFactory(), ItemPicker<RankItem> {
 
         override fun setContents(item: RankItem, payloads: MutableList<Any>?) {
             if (payloads != null && payloads.isNotEmpty()) {
-                updateSelectableState()
+                val flag = payloads[0] as Int
+                if (flag == FLAG_SELECTABLE_CHANGED) {
+                    updateSelectableState()
+                } else if (flag == BRecyclerAdapter.FLAG_PAYLOADS_SELECT) {
+                    if (isRankItemSingleSelectable) {
+                        itemView.rbSelect.isChecked = true
+                    } else {
+                        itemView.cbSelect.isChecked = true
+                    }
+                } else if (flag == BRecyclerAdapter.FLAG_PAYLOADS_DESELECT) {
+                    if (isRankItemSingleSelectable) {
+                        itemView.rbSelect.isChecked = false
+                    } else {
+                        itemView.cbSelect.isChecked = false
+                    }
+                }
+                return
+            }
+
+            itemView.ivIcon.setImageResource(R.mipmap.ic_launcher)
+            itemView.tvRank.text = item.rank.toString()
+
+            updateSelectableState()
+
+            if (isRankItemSingleSelectable) {
+                itemView.rbSelect.isChecked = isSelected(item)
             } else {
-                itemView.ivIcon.setImageResource(R.mipmap.ic_launcher)
-                itemView.tvRank.text = item.rank.toString()
-
-                if (!isRankItemSelectable) {
-                    return
-                }
-                updateSelectableState()
-
-                if (isRankItemSingleSelectable) {
-                    itemView.rbSelect.isChecked = isSelected(item)
-                } else {
-                    itemView.cbSelect.isChecked = isSelected(item)
-                }
+                itemView.cbSelect.isChecked = isSelected(item)
             }
         }
     }

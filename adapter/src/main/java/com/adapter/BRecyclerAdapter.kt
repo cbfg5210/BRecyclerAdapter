@@ -12,9 +12,13 @@ class BRecyclerAdapter<T : Any>(
         context: Context,
         private val viewHolderFactory: BViewHolderFactory
 ) : RecyclerView.Adapter<BViewHolder<Any>>() {
-    //保存列表项数据信息
+    companion object {
+        const val FLAG_PAYLOADS_SELECT = 10101
+        const val FLAG_PAYLOADS_DESELECT = 10102
+    }
+
+    //保存列表项 ViewType 信息
     private val viewTypeMap = HashMap<Class<Any>, Int>()
-    //布局泵
     private val layoutInflater = LayoutInflater.from(context)
 
     var items: MutableList<T> = ArrayList()
@@ -123,24 +127,28 @@ class BRecyclerAdapter<T : Any>(
                 if (!this.isSelectable(item)) {
                     return@run
                 }
+                //已经选中过了
                 if (this.isSelected(item)) {
+                    //如果是多选的话取消选中
                     if (!this.isSingleSelectable(item)) {
                         this.deselect(item)
-                        notifyItemChanged(position)
+                        notifyItemChanged(position, FLAG_PAYLOADS_DESELECT)
                     }
                 } else {
+                    //还没有选中过
+                    //如果是单选并且当前已经有选中的项了的话,先取消当前选中的
                     if (this.isSingleSelectable(item)) {
                         val currentSelection = this.getCurrentSelection(items)
                         if (currentSelection != null) {
                             this.deselect(currentSelection)
                             val index = items.indexOf(currentSelection)
                             if (index != -1) {
-                                notifyItemChanged(index)
+                                notifyItemChanged(index, FLAG_PAYLOADS_DESELECT)
                             }
                         }
                     }
                     this.select(item)
-                    notifyItemChanged(position)
+                    notifyItemChanged(position, FLAG_PAYLOADS_SELECT)
                 }
             }
 
