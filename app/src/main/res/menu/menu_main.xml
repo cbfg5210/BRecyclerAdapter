@@ -9,6 +9,9 @@
         android:id="@+id/menu_demo_payloads"
         android:title="Payloads" />
     <item
-        android:id="@+id/menu_demo_select"
+        android:id="@+id/menu_demo_select_single"
+        android:title="Select - single" />
+    <item
+        android:id="@+id/menu_demo_select_mix"
         android:title="Select - mix" />
 </menu>

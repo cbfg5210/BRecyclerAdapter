@@ -10,8 +10,8 @@ import com.adapter.demo.R
 import com.adapter.demo.RankItem
 import kotlinx.android.synthetic.main.fragment_list.view.rvTest
 import kotlinx.android.synthetic.main.fragment_list.view.tvDesc
-import kotlinx.android.synthetic.main.fragment_list_select.*
-import kotlinx.android.synthetic.main.fragment_list_select.view.*
+import kotlinx.android.synthetic.main.fragment_list_select_mix.*
+import kotlinx.android.synthetic.main.fragment_list_select_mix.view.*
 
 class MixSelectFragment : Fragment() {
     private lateinit var adapter: BRecyclerAdapter<RankItem>
@@ -22,7 +22,7 @@ class MixSelectFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        val layout = inflater.inflate(R.layout.fragment_list_select, container, false)
+        val layout = inflater.inflate(R.layout.fragment_list_select_mix, container, false)
 
         layout.tvDesc.text = "不可选/单选/多选 切换 Demo。\n\nRecyclerView："
 

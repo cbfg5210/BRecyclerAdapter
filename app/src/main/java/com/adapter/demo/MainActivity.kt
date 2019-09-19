@@ -6,13 +6,16 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.adapter.demo.payloads.PayloadsFragment
 import com.adapter.demo.select_mix.MixSelectFragment
+import com.adapter.demo.select_single.SingleSelectFragment
 import com.adapter.demo.simple.SimpleFragment
 
 class MainActivity : AppCompatActivity() {
     companion object {
         private const val FLAG_DEMO_SIMPLE = 1
         private const val FLAG_DEMO_PAYLOADS = 2
-        private const val FLAG_DEMO_SELECT = 3
+        private const val FLAG_DEMO_SELECT_SINGLE = 3
+        private const val FLAG_DEMO_SELECT_MULTI = 4
+        private const val FLAG_DEMO_SELECT_MIX = 5
     }
 
     private var currentPageFlag: Int = -1
@@ -31,7 +34,8 @@ class MainActivity : AppCompatActivity() {
         val fragment = when (flag) {
             FLAG_DEMO_SIMPLE -> SimpleFragment()
             FLAG_DEMO_PAYLOADS -> PayloadsFragment()
-            FLAG_DEMO_SELECT -> MixSelectFragment()
+            FLAG_DEMO_SELECT_SINGLE -> SingleSelectFragment()
+            FLAG_DEMO_SELECT_MIX -> MixSelectFragment()
             else -> return
         }
 
@@ -51,7 +55,8 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.menu_demo_simple -> showFragment(FLAG_DEMO_SIMPLE)
             R.id.menu_demo_payloads -> showFragment(FLAG_DEMO_PAYLOADS)
-            R.id.menu_demo_select -> showFragment(FLAG_DEMO_SELECT)
+            R.id.menu_demo_select_single -> showFragment(FLAG_DEMO_SELECT_SINGLE)
+            R.id.menu_demo_select_mix -> showFragment(FLAG_DEMO_SELECT_MIX)
         }
         return true
     }
