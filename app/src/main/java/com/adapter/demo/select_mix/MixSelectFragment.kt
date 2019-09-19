@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.fragment_list_select_mix.*
 import kotlinx.android.synthetic.main.fragment_list_select_mix.view.*
 
 class MixSelectFragment : Fragment() {
+    private lateinit var layout: View
     private lateinit var adapter: BRecyclerAdapter<RankItem>
     private lateinit var vhFactory: MixSelectVHFactory
 
@@ -22,7 +23,7 @@ class MixSelectFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        val layout = inflater.inflate(R.layout.fragment_list_select_mix, container, false)
+        layout = inflater.inflate(R.layout.fragment_list_select_mix, container, false)
 
         layout.tvDesc.text = "不可选/单选/多选 切换 Demo。\n\nRecyclerView："
 
@@ -81,7 +82,7 @@ class MixSelectFragment : Fragment() {
     }
 
     private fun showSelectedItems() {
-        tvSelections.text = "选中的项: "
+        layout.tvSelections.text = "选中的项: "
         vhFactory.selectedItems.forEach { tvSelections.append("rank-${it.rank},") }
     }
 
