@@ -18,7 +18,7 @@ class BRecyclerAdapter<T : Any>(
     }
 
     //保存列表项信息
-    private val itemInfoMap = HashMap<Class<Any>, ItemInfo>()
+    private val itemInfoMap = HashMap<Class<out Any>, ItemInfo>()
     private val layoutInflater = LayoutInflater.from(context)
 
     var items: MutableList<T> = ArrayList()
@@ -56,6 +56,14 @@ class BRecyclerAdapter<T : Any>(
             }
         }
 
+        return this
+    }
+
+    /**
+     * 添加默认选中项
+     */
+    fun addSelection(item: T): BRecyclerAdapter<T> {
+        this.selections.add(item)
         return this
     }
 
@@ -116,7 +124,7 @@ class BRecyclerAdapter<T : Any>(
     /**
      * 设置 Item 属性信息
      */
-    fun setItemInfo(classType: Class<Any>, selectable: Boolean, multiSelectable: Boolean): BRecyclerAdapter<T> {
+    fun setItemInfo(classType: Class<out Any>, selectable: Boolean, multiSelectable: Boolean): BRecyclerAdapter<T> {
         getItemInfo(classType).apply {
             this.selectable = selectable
             this.multiSelectable = multiSelectable
@@ -146,7 +154,8 @@ class BRecyclerAdapter<T : Any>(
 
     override fun onBindViewHolder(holder: BViewHolder<Any>, position: Int) {
         val item = items[position]
-        holder.setContents(item, null)
+        val itemInfo = getItemInfo(item.javaClass)
+        holder.setContents(item, itemInfo.selectable && selections.contains(item))
     }
 
     override fun onBindViewHolder(
@@ -155,7 +164,8 @@ class BRecyclerAdapter<T : Any>(
             payloads: MutableList<Any>
     ) {
         val item = items[position]
-        holder.setContents(item, payloads)
+        val itemInfo = getItemInfo(item.javaClass)
+        holder.setContents(item, itemInfo.selectable && selections.contains(item), payloads)
     }
 
     private fun onItemClick(
@@ -221,7 +231,7 @@ class BRecyclerAdapter<T : Any>(
      * @param classType
      * @return
      */
-    private fun getItemInfo(classType: Class<Any>): ItemInfo {
+    private fun getItemInfo(classType: Class<out Any>): ItemInfo {
         return itemInfoMap[classType]
                 ?: ItemInfo(itemInfoMap.size).apply { itemInfoMap[classType] = this }
     }

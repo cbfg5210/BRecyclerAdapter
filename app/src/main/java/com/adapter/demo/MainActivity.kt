@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.adapter.demo.payloads.PayloadsFragment
+import com.adapter.demo.select_single.SingleSelectFragment
 import com.adapter.demo.simple.SimpleFragment
 
 class MainActivity : AppCompatActivity() {
@@ -32,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         val fragment = when (flag) {
             FLAG_DEMO_SIMPLE -> SimpleFragment()
             FLAG_DEMO_PAYLOADS -> PayloadsFragment()
-//            FLAG_DEMO_SELECT_SINGLE -> SingleSelectFragment()
+            FLAG_DEMO_SELECT_SINGLE -> SingleSelectFragment()
 //            FLAG_DEMO_SELECT_MULTI -> MultiSelectFragment()
 //            FLAG_DEMO_SELECT_MIX -> MixSelectFragment()
             else -> return

@@ -32,7 +32,7 @@ class SimpleVHFactory : BViewHolderFactory() {
     private inner class RankItemVH(inflater: LayoutInflater, parent: ViewGroup?) :
             BViewHolder<RankItem>(inflater, parent, R.layout.item_simple) {
 
-        override fun setContents(item: RankItem, payloads: MutableList<Any>?) {
+        override fun setContents(item: RankItem, isSelected: Boolean, payloads: MutableList<Any>?) {
             itemView.ivIcon.setImageResource(R.mipmap.ic_launcher)
             itemView.tvRank.text = item.rank.toString()
         }

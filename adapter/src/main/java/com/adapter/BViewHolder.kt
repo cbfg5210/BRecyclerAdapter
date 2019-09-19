@@ -16,7 +16,7 @@ abstract class BViewHolder<T : Any>(inflater: LayoutInflater,
                                     @LayoutRes layoutRes: Int,
                                     attachToRoot: Boolean = false) : RecyclerView.ViewHolder(inflater.inflate(layoutRes, parent, attachToRoot)) {
 
-    abstract fun setContents(item: T, payloads: MutableList<Any>?)
+    abstract fun setContents(item: T, isSelected: Boolean, payloads: MutableList<Any>? = null)
 
     open fun setListeners(clickListener: View.OnClickListener, longClickListener: View.OnLongClickListener) {
         itemView.setOnClickListener(clickListener)
