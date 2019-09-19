@@ -1,4 +1,4 @@
-package com.adapter.demo.select
+package com.adapter.demo.select_mix
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -5,7 +5,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.adapter.demo.payloads.PayloadsFragment
-import com.adapter.demo.select.SelectFragment
+import com.adapter.demo.select_mix.SelectFragment
 import com.adapter.demo.simple.SimpleFragment
 
 class MainActivity : AppCompatActivity() {
