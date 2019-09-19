@@ -26,7 +26,7 @@ class SimpleFragment : Fragment() {
                 .bindRecyclerView(layout.rvTest)
                 .setItems(getItems())
                 .setItemLongClickListener { _, _, position -> Toast.makeText(activity, "长按了 ItemView, position=$position", Toast.LENGTH_SHORT).show() }
-                .setItemClickListener { view, item, position ->
+                .setItemClickListener { view, _, position ->
                     when (view.id) {
                         R.id.ivIcon -> Toast.makeText(activity, "点击了 Icon, position=$position", Toast.LENGTH_SHORT).show()
                         R.id.tvRank -> Toast.makeText(activity, "点击了 Rank, position=$position", Toast.LENGTH_SHORT).show()
