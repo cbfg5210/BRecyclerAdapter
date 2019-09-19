@@ -23,12 +23,12 @@ class BRecyclerAdapter<T : Any>(
 
     var items: MutableList<T> = ArrayList()
         private set
+    //选中项列表
+    val selections = ArrayList<Any>()
 
     //点击、长按事件
     private var itemClickListener: ((view: View, item: T, position: Int) -> Unit)? = null
     private var itemLongClickListener: ((view: View, item: T, position: Int) -> Unit)? = null
-
-    private var itemPicker: ItemPicker<T>? = null
 
     //记录调用 @see getItemViewType() 时的position
     private var itemPosition: Int = 0
@@ -40,8 +40,50 @@ class BRecyclerAdapter<T : Any>(
      */
     fun setItems(mItems: List<T>?): BRecyclerAdapter<T> {
         items.clear()
-        mItems?.run { if (this.isNotEmpty()) items.addAll(this) }
+        mItems ?: return this
+
+        if (mItems.isNotEmpty()) {
+            items.addAll(mItems)
+            //如果有选中项,删除无效的选中项
+            if (selections.size > 0) {
+                val iterator = selections.iterator()
+                while (iterator.hasNext()) {
+                    val item = iterator.next()
+                    if (!items.contains(item)) {
+                        selections.remove(item)
+                    }
+                }
+            }
+        }
+
         return this
+    }
+
+    /**
+     * 移除单个数据项
+     */
+    fun remove(index: Int) {
+        remove(items[index])
+    }
+
+    /**
+     * 移除单个数据项
+     */
+    fun remove(item: T) {
+        items.remove(item)
+        if (selections.contains(item)) {
+            selections.remove(item)
+        }
+    }
+
+    /**
+     * 清空数据
+     */
+    fun clear() {
+        items.clear()
+        if (selections.size > 0) {
+            selections.clear()
+        }
     }
 
     /**
@@ -52,14 +94,6 @@ class BRecyclerAdapter<T : Any>(
      */
     fun bindRecyclerView(recyclerView: RecyclerView): BRecyclerAdapter<T> {
         recyclerView.adapter = this
-        return this
-    }
-
-    /**
-     * 设置项选择器
-     */
-    fun setItemPicker(itemPicker: ItemPicker<T>): BRecyclerAdapter<T> {
-        this.itemPicker = itemPicker
         return this
     }
 
@@ -76,6 +110,17 @@ class BRecyclerAdapter<T : Any>(
      */
     fun setItemLongClickListener(itemLongClicker: (view: View, item: T, position: Int) -> Unit): BRecyclerAdapter<T> {
         this.itemLongClickListener = itemLongClicker
+        return this
+    }
+
+    /**
+     * 设置 Item 属性信息
+     */
+    fun setItemInfo(classType: Class<Any>, selectable: Boolean, multiSelectable: Boolean): BRecyclerAdapter<T> {
+        getItemInfo(classType).apply {
+            this.selectable = selectable
+            this.multiSelectable = multiSelectable
+        }
         return this
     }
 
@@ -119,42 +164,54 @@ class BRecyclerAdapter<T : Any>(
             clicker: ((view: View, item: T, position: Int) -> Unit)?
     ): Boolean {
         val position = holder.adapterPosition
-        if (position >= 0 && position < items.size) {
-            val item = items[position]
 
-            //选中/取消选中回调
-            itemPicker?.run {
-                if (!this.isSelectable(item)) {
-                    return@run
+        if (position < 0 || position >= items.size) {
+            return false
+        }
+
+        val item = items[position]
+        val itemInfo = getItemInfo(item.javaClass)
+
+        //选中/取消选中回调
+        //可以选中
+        if (itemInfo.selectable) {
+            //多选
+            if (itemInfo.multiSelectable) {
+                //如果已经选中过该项则取消选中
+                if (selections.contains(item)) {
+                    selections.remove(item)
+                    notifyItemChanged(position, FLAG_PAYLOADS_DESELECT)
                 }
-                //已经选中过了
-                if (this.isSelected(item)) {
-                    //如果是多选的话取消选中
-                    if (!this.isSingleSelectable(item)) {
-                        this.deselect(item)
-                        notifyItemChanged(position, FLAG_PAYLOADS_DESELECT)
-                    }
-                } else {
-                    //还没有选中过
-                    //如果是单选并且当前已经有选中的项了的话,先取消当前选中的
-                    if (this.isSingleSelectable(item)) {
-                        val currentSelection = this.getCurrentSelection(items)
-                        if (currentSelection != null) {
-                            this.deselect(currentSelection)
-                            val index = items.indexOf(currentSelection)
+                selections.add(item)
+                notifyItemChanged(position, FLAG_PAYLOADS_SELECT)
+            } else if (!selections.contains(item)) {
+                //单选
+                //还没选中过该项
+                //判断是否已经选中同类型的项
+                if (selections.size > 0) {
+                    val min = selections.size.coerceAtMost(itemInfoMap.size)
+                    for (i in 0..min) {
+                        //如果已经选中同类型的项,先移除之前选中的
+                        val selection = selections[i]
+                        if (selection.javaClass == item.javaClass) {
+                            selections.removeAt(i)
+                            val index = items.indexOf(selection)
                             if (index != -1) {
                                 notifyItemChanged(index, FLAG_PAYLOADS_DESELECT)
                             }
+                            break
                         }
                     }
-                    this.select(item)
-                    notifyItemChanged(position, FLAG_PAYLOADS_SELECT)
                 }
+                //将该项放置到最开始位置,方便检索是否已经选中同类型的项
+                selections.add(0, item)
+                notifyItemChanged(position, FLAG_PAYLOADS_SELECT)
             }
-
-            //点击/长按回调
-            clicker?.run { this(v, item, position) }
         }
+
+        //点击/长按回调
+        clicker?.run { this(v, item, position) }
+
         return true
     }
 
