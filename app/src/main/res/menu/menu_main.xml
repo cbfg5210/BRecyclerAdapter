@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText">
+    <item
+        android:id="@+id/menu_demo_simple"
+        android:title="Simple" />
+    <item
+        android:id="@+id/menu_demo_payloads"
+        android:title="Payloads" />
+    <item
+        android:id="@+id/menu_demo3"
+        android:title="Demo_3" />
+</menu>
