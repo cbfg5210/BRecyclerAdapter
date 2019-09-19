@@ -31,17 +31,11 @@ class SingleSelectVHFactory : BViewHolderFactory(), ItemPicker<RankItem> {
         return RankItemVH(inflater, parent)
     }
 
-    override fun isSelectable(t: RankItem): Boolean {
-        return true
-    }
+    override fun isSelectable(t: RankItem) = true
 
-    override fun isSingleSelectable(t: RankItem): Boolean {
-        return true
-    }
+    override fun isSingleSelectable(t: RankItem) = true
 
-    override fun isSelected(t: RankItem): Boolean {
-        return selectedItem == t
-    }
+    override fun isSelected(t: RankItem) = selectedItem == t
 
     override fun select(t: RankItem) {
         selectedItem = t
@@ -50,9 +44,7 @@ class SingleSelectVHFactory : BViewHolderFactory(), ItemPicker<RankItem> {
     override fun deselect(t: RankItem) {
     }
 
-    override fun getCurrentSelection(items: List<RankItem>): RankItem? {
-        return selectedItem
-    }
+    override fun getCurrentSelection(items: List<RankItem>) = selectedItem
 
     private inner class RankItemVH(inflater: LayoutInflater, parent: ViewGroup?) :
             BViewHolder<RankItem>(inflater, parent, R.layout.item_select_single) {

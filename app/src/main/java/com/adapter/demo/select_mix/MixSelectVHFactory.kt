@@ -55,17 +55,11 @@ class MixSelectVHFactory : BViewHolderFactory(), ItemPicker<RankItem> {
         return RankItemVH(inflater, parent)
     }
 
-    override fun isSelectable(t: RankItem): Boolean {
-        return isRankItemSelectable
-    }
+    override fun isSelectable(t: RankItem) = isRankItemSelectable
 
-    override fun isSingleSelectable(t: RankItem): Boolean {
-        return isRankItemSingleSelectable
-    }
+    override fun isSingleSelectable(t: RankItem) = isRankItemSingleSelectable
 
-    override fun isSelected(t: RankItem): Boolean {
-        return selectedItems.contains(t)
-    }
+    override fun isSelected(t: RankItem) = selectedItems.contains(t)
 
     override fun select(t: RankItem) {
         selectedItems.add(t)

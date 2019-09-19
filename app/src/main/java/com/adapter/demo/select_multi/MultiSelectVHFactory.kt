@@ -32,17 +32,11 @@ class MultiSelectVHFactory : BViewHolderFactory(), ItemPicker<RankItem> {
         return RankItemVH(inflater, parent)
     }
 
-    override fun isSelectable(t: RankItem): Boolean {
-        return true
-    }
+    override fun isSelectable(t: RankItem) = true
 
-    override fun isSingleSelectable(t: RankItem): Boolean {
-        return false
-    }
+    override fun isSingleSelectable(t: RankItem) = false
 
-    override fun isSelected(t: RankItem): Boolean {
-        return selectedItems.contains(t)
-    }
+    override fun isSelected(t: RankItem) = selectedItems.contains(t)
 
     override fun select(t: RankItem) {
         selectedItems.add(t)
