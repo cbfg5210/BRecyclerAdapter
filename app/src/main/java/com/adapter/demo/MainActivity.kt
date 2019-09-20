@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import com.adapter.demo.multi_type_single_bean.MultiTypeSBFragment
 import com.adapter.demo.payloads.PayloadsFragment
 import com.adapter.demo.select_mix.MixSelectFragment
 import com.adapter.demo.select_multi.MultiSelectFragment
@@ -17,6 +18,8 @@ class MainActivity : AppCompatActivity() {
         private const val FLAG_DEMO_SELECT_SINGLE = 3
         private const val FLAG_DEMO_SELECT_MULTI = 4
         private const val FLAG_DEMO_SELECT_MIX = 5
+        private const val FLAG_DEMO_MULTI_TYPE_SB = 6
+        //private const val FLAG_DEMO_SELECT_MIX = 5
     }
 
     private var currentPageFlag: Int = -1
@@ -38,6 +41,7 @@ class MainActivity : AppCompatActivity() {
             FLAG_DEMO_SELECT_SINGLE -> SingleSelectFragment()
             FLAG_DEMO_SELECT_MULTI -> MultiSelectFragment()
             FLAG_DEMO_SELECT_MIX -> MixSelectFragment()
+            FLAG_DEMO_MULTI_TYPE_SB -> MultiTypeSBFragment()
             else -> return
         }
 
@@ -55,11 +59,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menu_demo_simple -> showFragment(FLAG_DEMO_SIMPLE)
-            R.id.menu_demo_payloads -> showFragment(FLAG_DEMO_PAYLOADS)
-            R.id.menu_demo_select_single -> showFragment(FLAG_DEMO_SELECT_SINGLE)
-            R.id.menu_demo_select_multi -> showFragment(FLAG_DEMO_SELECT_MULTI)
-            R.id.menu_demo_select_mix -> showFragment(FLAG_DEMO_SELECT_MIX)
+            R.id.simpleDemo -> showFragment(FLAG_DEMO_SIMPLE)
+            R.id.payloadsDemo -> showFragment(FLAG_DEMO_PAYLOADS)
+            R.id.singleSelectDemo -> showFragment(FLAG_DEMO_SELECT_SINGLE)
+            R.id.multiSelectDemo -> showFragment(FLAG_DEMO_SELECT_MULTI)
+            R.id.mixSelectDemo -> showFragment(FLAG_DEMO_SELECT_MIX)
+            R.id.multiTypeSBDemo -> showFragment(FLAG_DEMO_MULTI_TYPE_SB)
         }
         return true
     }

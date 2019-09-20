@@ -3,18 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="HardcodedText">
     <item
-        android:id="@+id/menu_demo_simple"
+        android:id="@+id/simpleDemo"
         android:title="Simple" />
     <item
-        android:id="@+id/menu_demo_payloads"
+        android:id="@+id/payloadsDemo"
         android:title="Payloads" />
     <item
-        android:id="@+id/menu_demo_select_single"
+        android:id="@+id/singleSelectDemo"
         android:title="Select - single" />
     <item
-        android:id="@+id/menu_demo_select_multi"
+        android:id="@+id/multiSelectDemo"
         android:title="Select - multi" />
     <item
-        android:id="@+id/menu_demo_select_mix"
+        android:id="@+id/mixSelectDemo"
         android:title="Select - mix" />
+    <item
+        android:id="@+id/multiTypeSBDemo"
+        android:title="Select - multi-type single bean" />
 </menu>
