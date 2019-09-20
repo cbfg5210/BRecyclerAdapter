@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.adapter.BRecyclerAdapter
 import com.adapter.demo.R
-import com.adapter.demo.RankItem
+import com.adapter.demo.model.RankItem
 import kotlinx.android.synthetic.main.fragment_list.view.*
 
 class PayloadsFragment : Fragment() {

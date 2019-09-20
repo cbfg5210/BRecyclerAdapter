@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import com.adapter.BViewHolder
 import com.adapter.BViewHolderFactory
 import com.adapter.demo.R
-import com.adapter.demo.RankItem
+import com.adapter.demo.model.RankItem
 import kotlinx.android.synthetic.main.item_simple.view.*
 
 /**
