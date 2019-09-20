@@ -22,8 +22,6 @@ class SimpleFragment : Fragment(), View.OnClickListener {
     ): View? {
         val layout = inflater.inflate(R.layout.fragment_list, container, false)
 
-        layout.tvDesc.text = "最基础的一个 Demo，设置了点击和长按事件，可以添加/移除 Item。"
-
         adapter = BRecyclerAdapter<RankItem>(context!!, SimpleVHFactory())
                 .bindRecyclerView(layout.rvTest)
                 .setItems(getItems())

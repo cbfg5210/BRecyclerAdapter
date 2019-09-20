@@ -9,7 +9,6 @@ import com.adapter.BRecyclerAdapter
 import com.adapter.demo.R
 import com.adapter.model.RankItem
 import kotlinx.android.synthetic.main.fragment_list.view.rvTest
-import kotlinx.android.synthetic.main.fragment_list.view.tvDesc
 import kotlinx.android.synthetic.main.fragment_list_select_mix.*
 import kotlinx.android.synthetic.main.fragment_list_select_mix.view.*
 
@@ -23,8 +22,6 @@ class MultiSelectFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         layout = inflater.inflate(R.layout.fragment_list_select_multi, container, false)
-
-        layout.tvDesc.text = "多选 Demo。\n\nRecyclerView："
 
         adapter = BRecyclerAdapter<RankItem>(context!!, MultiSelectVHFactory())
                 .bindRecyclerView(layout.rvTest)

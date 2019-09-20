@@ -22,8 +22,6 @@ class MultiTypeMBFragment : Fragment() {
     ): View? {
         val layout = inflater.inflate(R.layout.fragment_multi_type_mb, container, false)
 
-        layout.tvDesc.text = "多数据类型多 ViewType demo。"
-
         BRecyclerAdapter<Any>(context!!, MultiTypeMBVHFactory())
                 .bindRecyclerView(layout.rvTest)
                 .setItems(getItems())

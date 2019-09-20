@@ -9,7 +9,6 @@ import com.adapter.BRecyclerAdapter
 import com.adapter.demo.R
 import com.adapter.model.RankItem
 import kotlinx.android.synthetic.main.fragment_list.view.rvTest
-import kotlinx.android.synthetic.main.fragment_list.view.tvDesc
 import kotlinx.android.synthetic.main.fragment_list_select_single.view.*
 
 class SingleSelectFragment : Fragment() {
@@ -22,8 +21,6 @@ class SingleSelectFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         layout = inflater.inflate(R.layout.fragment_list_select_single, container, false)
-
-        layout.tvDesc.text = "单选 Demo。\n\nRecyclerView："
 
         val items = getItems()
 

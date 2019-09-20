@@ -11,7 +11,6 @@ import com.adapter.model.CommodityItem
 import com.adapter.model.ShopItem
 import kotlinx.android.synthetic.main.fragment_complex.view.*
 import kotlinx.android.synthetic.main.fragment_list.view.rvTest
-import kotlinx.android.synthetic.main.fragment_list.view.tvDesc
 
 class ComplexFragment : Fragment() {
     private lateinit var layout: View
@@ -23,7 +22,6 @@ class ComplexFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         layout = inflater.inflate(R.layout.fragment_complex, container, false)
-        layout.tvDesc.text = "复合 demo。"
 
         adapter = BRecyclerAdapter<Any>(context!!, ComplexVHFactory())
                 .bindRecyclerView(layout.rvTest)

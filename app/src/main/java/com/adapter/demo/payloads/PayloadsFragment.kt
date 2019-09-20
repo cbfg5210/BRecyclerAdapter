@@ -18,9 +18,7 @@ class PayloadsFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        val layout = inflater.inflate(R.layout.fragment_list, container, false)
-
-        layout.tvDesc.text = "Item 局部刷新 Demo（RecyclerView.Adapter.notifyItemChanged(int position, @Nullable Object payload)）。\n\nRecyclerView："
+        val layout = inflater.inflate(R.layout.fragment_payloads, container, false)
 
         adapter = BRecyclerAdapter<RankItem>(context!!, PayloadsVHFactory())
                 .bindRecyclerView(layout.rvTest)

@@ -20,8 +20,6 @@ class MultiTypeSBFragment : Fragment() {
     ): View? {
         val layout = inflater.inflate(R.layout.fragment_multi_type_sb, container, false)
 
-        layout.tvDesc.text = "同种数据类型多 ViewType demo。"
-
         BRecyclerAdapter<ChatMsgItem>(context!!, MultiTypeSBVHFactory())
                 .bindRecyclerView(layout.rvTest)
                 .setItems(getItems())
