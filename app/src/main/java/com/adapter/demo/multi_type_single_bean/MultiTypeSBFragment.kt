@@ -12,8 +12,6 @@ import com.adapter.demo.model.ChatMsgItem
 import kotlinx.android.synthetic.main.fragment_list.view.*
 
 class MultiTypeSBFragment : Fragment() {
-    private lateinit var adapter: BRecyclerAdapter<ChatMsgItem>
-    private var count: Int = 3
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -22,9 +20,9 @@ class MultiTypeSBFragment : Fragment() {
     ): View? {
         val layout = inflater.inflate(R.layout.fragment_multi_type_sb, container, false)
 
-        layout.tvDesc.text = "最基础的一个 Demo，设置了点击和长按事件，可以添加/移除 Item。"
+        layout.tvDesc.text = "同种数据类型多 ViewType demo。"
 
-        adapter = BRecyclerAdapter<ChatMsgItem>(context!!, MultiTypeSBVHFactory())
+        BRecyclerAdapter<ChatMsgItem>(context!!, MultiTypeSBVHFactory())
                 .bindRecyclerView(layout.rvTest)
                 .setItems(getItems())
                 .setItemClickListener { _, item, position ->
