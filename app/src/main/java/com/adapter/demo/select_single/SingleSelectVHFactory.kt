@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import com.adapter.BViewHolder
 import com.adapter.BViewHolderFactory
 import com.adapter.demo.R
-import com.adapter.demo.model.RankItem
+import com.adapter.model.RankItem
 import kotlinx.android.synthetic.main.item_select_mix.view.*
 import kotlinx.android.synthetic.main.item_simple.view.ivIcon
 import kotlinx.android.synthetic.main.item_simple.view.tvRank

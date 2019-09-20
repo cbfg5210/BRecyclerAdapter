@@ -1,6 +1,4 @@
-package com.adapter.demo.model
-
-import androidx.annotation.DrawableRes
+package com.adapter.model
 
 /**
  * 添加人：  Tom Hawk
@@ -11,4 +9,4 @@ import androidx.annotation.DrawableRes
  * 修改时间：2019/9/20 14:06
  * 修改内容：
  */
-data class ImageItem(@DrawableRes val imageRes: Int)
+data class TextItem(val text: String)

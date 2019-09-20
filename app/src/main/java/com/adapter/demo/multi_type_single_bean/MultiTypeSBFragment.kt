@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.adapter.BRecyclerAdapter
 import com.adapter.demo.R
-import com.adapter.demo.model.ChatMsgItem
+import com.adapter.model.ChatMsgItem
 import kotlinx.android.synthetic.main.fragment_list.view.*
 
 class MultiTypeSBFragment : Fragment() {

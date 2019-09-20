@@ -7,7 +7,7 @@ import com.adapter.BRecyclerAdapter
 import com.adapter.BViewHolder
 import com.adapter.BViewHolderFactory
 import com.adapter.demo.R
-import com.adapter.demo.model.RankItem
+import com.adapter.model.RankItem
 import kotlinx.android.synthetic.main.item_select_mix.view.*
 
 /**

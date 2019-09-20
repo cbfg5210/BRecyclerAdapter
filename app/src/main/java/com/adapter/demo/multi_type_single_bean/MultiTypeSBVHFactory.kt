@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import com.adapter.BViewHolder
 import com.adapter.BViewHolderFactory
 import com.adapter.demo.R
-import com.adapter.demo.model.ChatMsgItem
+import com.adapter.model.ChatMsgItem
 import kotlinx.android.synthetic.main.item_multi_type_sb_me.view.*
 import kotlinx.android.synthetic.main.item_simple.view.ivIcon
 

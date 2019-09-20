@@ -8,9 +8,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.adapter.BRecyclerAdapter
 import com.adapter.demo.R
-import com.adapter.demo.model.ImageItem
-import com.adapter.demo.model.TextItem
-import com.adapter.demo.model.TitleItem
+import com.adapter.model.ImageItem
+import com.adapter.model.TextItem
+import com.adapter.model.TitleItem
 import kotlinx.android.synthetic.main.fragment_list.view.*
 
 class MultiTypeMBFragment : Fragment() {

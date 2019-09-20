@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.adapter.BRecyclerAdapter
 import com.adapter.demo.R
-import com.adapter.demo.model.RankItem
+import com.adapter.model.RankItem
 import kotlinx.android.synthetic.main.fragment_list.view.rvTest
 import kotlinx.android.synthetic.main.fragment_list.view.tvDesc
 import kotlinx.android.synthetic.main.fragment_list_select_single.view.*

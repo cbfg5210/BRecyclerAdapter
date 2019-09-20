@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import com.adapter.BViewHolder
 import com.adapter.BViewHolderFactory
 import com.adapter.demo.R
-import com.adapter.demo.model.ImageItem
-import com.adapter.demo.model.TextItem
-import com.adapter.demo.model.TitleItem
+import com.adapter.model.ImageItem
+import com.adapter.model.TextItem
+import com.adapter.model.TitleItem
 import kotlinx.android.synthetic.main.item_multi_type_mb_image.view.*
 import kotlinx.android.synthetic.main.item_multi_type_mb_text.view.*
 import kotlinx.android.synthetic.main.item_multi_type_mb_title.view.*

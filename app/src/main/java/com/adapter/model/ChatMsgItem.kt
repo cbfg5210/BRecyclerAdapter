@@ -1,4 +1,4 @@
-package com.adapter.demo.model
+package com.adapter.model
 
 /**
  * 添加人：  Tom Hawk
