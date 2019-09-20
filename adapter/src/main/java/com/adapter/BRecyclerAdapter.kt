@@ -15,6 +15,9 @@ class BRecyclerAdapter<T : Any>(
     companion object {
         const val FLAG_PAYLOADS_SELECT = 10101
         const val FLAG_PAYLOADS_DESELECT = 10102
+        const val FLAG_UNSELECTABLE = 10103
+        const val FLAG_SINGLE_SELECTABLE = 10104
+        const val FLAG_MULTI_SELECTABLE = 10105
     }
 
     //保存列表项信息
@@ -225,7 +228,7 @@ class BRecyclerAdapter<T : Any>(
                 holder.setContents(item, true, payload)
                 return
             }
-            if (payload == FLAG_PAYLOADS_DESELECT) {
+            if (payload == FLAG_PAYLOADS_DESELECT || payload == FLAG_UNSELECTABLE) {
                 holder.setContents(item, false, payload)
                 return
             }
