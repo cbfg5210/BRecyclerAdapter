@@ -93,7 +93,7 @@ class BRecyclerAdapter<T : Any>(
     /**
      * 移除单个数据项
      */
-    fun remove(index: Int) {
+    fun removeAt(index: Int) {
         remove(items[index])
     }
 

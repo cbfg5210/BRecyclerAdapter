@@ -11,7 +11,9 @@ import com.adapter.demo.R
 import com.adapter.demo.model.RankItem
 import kotlinx.android.synthetic.main.fragment_list.view.*
 
-class SimpleFragment : Fragment() {
+class SimpleFragment : Fragment(), View.OnClickListener {
+    private lateinit var adapter: BRecyclerAdapter<RankItem>
+    private var count: Int = 3
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -20,26 +22,58 @@ class SimpleFragment : Fragment() {
     ): View? {
         val layout = inflater.inflate(R.layout.fragment_list, container, false)
 
-        layout.tvDesc.text = "最基础的一个 Demo，设置了点击和长按事件。\n\nRecyclerView："
+        layout.tvDesc.text = "最基础的一个 Demo，设置了点击和长按事件，可以添加/移除 Item。"
 
-        BRecyclerAdapter<RankItem>(context!!, SimpleVHFactory())
+        adapter = BRecyclerAdapter<RankItem>(context!!, SimpleVHFactory())
                 .bindRecyclerView(layout.rvTest)
                 .setItems(getItems())
-                .setItemLongClickListener { _, _, position -> Toast.makeText(activity, "长按了 ItemView, position=$position", Toast.LENGTH_SHORT).show() }
-                .setItemClickListener { view, _, position ->
+                .setItemLongClickListener { _, item, position -> Toast.makeText(activity, "长按了 ItemView, position=$position，rank=${item.rank}", Toast.LENGTH_SHORT).show() }
+                .setItemClickListener { view, item, position ->
                     when (view.id) {
-                        R.id.ivIcon -> Toast.makeText(activity, "点击了 Icon, position=$position", Toast.LENGTH_SHORT).show()
-                        R.id.tvRank -> Toast.makeText(activity, "点击了 Rank, position=$position", Toast.LENGTH_SHORT).show()
-                        else -> Toast.makeText(activity, "点击了 ItemView, position=$position", Toast.LENGTH_SHORT).show()
+                        R.id.ivIcon -> Toast.makeText(activity, "点击了 Icon, position=$position，rank=${item.rank}", Toast.LENGTH_SHORT).show()
+                        R.id.tvRank -> Toast.makeText(activity, "点击了 Rank, position=$position，rank=${item.rank}", Toast.LENGTH_SHORT).show()
+                        else -> Toast.makeText(activity, "点击了 ItemView, position=$position，rank=${item.rank}", Toast.LENGTH_SHORT).show()
                     }
                 }
+
+        layout.btnTopAdd.setOnClickListener(this)
+        layout.btnTopRemove.setOnClickListener(this)
+        layout.btnBottomAdd.setOnClickListener(this)
+        layout.btnBottomRemove.setOnClickListener(this)
 
         return layout
     }
 
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.btnTopAdd -> {
+                adapter.items.add(0, RankItem("", ++count))
+                adapter.notifyItemInserted(0)
+            }
+            R.id.btnTopRemove -> {
+                if (adapter.itemCount > 0) {
+                    adapter.removeAt(0)
+                    adapter.notifyItemRemoved(0)
+                }
+            }
+            R.id.btnBottomAdd -> {
+                val index = adapter.itemCount
+                adapter.items.add(index, RankItem("", ++count))
+                adapter.notifyItemInserted(index)
+            }
+            R.id.btnBottomRemove -> {
+                if (adapter.itemCount > 0) {
+                    val index = adapter.itemCount - 1
+                    adapter.removeAt(index)
+                    adapter.notifyItemRemoved(index)
+                }
+            }
+        }
+    }
+
     private fun getItems(): List<RankItem> {
         val items = ArrayList<RankItem>()
-        for (i in 1..26) {
+        for (i in 1..count) {
             items.add(RankItem("", i))
         }
         return items
