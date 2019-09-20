@@ -2,7 +2,6 @@ package com.adapter.demo.select_multi
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.adapter.BRecyclerAdapter
 import com.adapter.BViewHolder
 import com.adapter.BViewHolderFactory
 import com.adapter.demo.R
@@ -33,12 +32,9 @@ class MultiSelectVHFactory : BViewHolderFactory() {
     private inner class RankItemVH(inflater: LayoutInflater, parent: ViewGroup?) :
             BViewHolder<RankItem>(inflater, parent, R.layout.item_select_multi) {
 
-        override fun setContents(item: RankItem, isSelected: Boolean, payloads: MutableList<Any>?) {
-            if (payloads != null && payloads.isNotEmpty()) {
-                when (payloads[0] as Int) {
-                    BRecyclerAdapter.FLAG_PAYLOADS_SELECT -> itemView.cbSelect.isChecked = true
-                    BRecyclerAdapter.FLAG_PAYLOADS_DESELECT -> itemView.cbSelect.isChecked = false
-                }
+        override fun setContents(item: RankItem, isSelected: Boolean, payload: Any?) {
+            if (payload != null) {
+                itemView.cbSelect.isChecked = isSelected
                 return
             }
 

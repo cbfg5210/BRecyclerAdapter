@@ -22,17 +22,17 @@ import kotlinx.android.synthetic.main.item_simple.view.*
 class SimpleVHFactory : BViewHolderFactory() {
 
     override fun createViewHolder(
-            inflater: LayoutInflater,
-            parent: ViewGroup?,
-            item: Any
+        inflater: LayoutInflater,
+        parent: ViewGroup?,
+        item: Any
     ): BViewHolder<out Any> {
         return RankItemVH(inflater, parent)
     }
 
     private inner class RankItemVH(inflater: LayoutInflater, parent: ViewGroup?) :
-            BViewHolder<RankItem>(inflater, parent, R.layout.item_simple) {
+        BViewHolder<RankItem>(inflater, parent, R.layout.item_simple) {
 
-        override fun setContents(item: RankItem, isSelected: Boolean, payloads: MutableList<Any>?) {
+        override fun setContents(item: RankItem, isSelected: Boolean, payload: Any?) {
             itemView.ivIcon.setImageResource(R.mipmap.ic_launcher)
             itemView.tvRank.text = item.rank.toString()
         }
@@ -42,7 +42,10 @@ class SimpleVHFactory : BViewHolderFactory() {
          * 如果需要给除 itemView 外的 view 设置点击/长按事件则需要重写以下方法,
          * 否则不用重写以下方法
          */
-        override fun setListeners(clickListener: View.OnClickListener, longClickListener: View.OnLongClickListener) {
+        override fun setListeners(
+            clickListener: View.OnClickListener,
+            longClickListener: View.OnLongClickListener
+        ) {
             //默认给 itemView 设置点击和长按事件,如果不需要可以去掉以下一句
             super.setListeners(clickListener, longClickListener)
 

@@ -32,8 +32,8 @@ class SingleSelectVHFactory : BViewHolderFactory() {
     private inner class RankItemVH(inflater: LayoutInflater, parent: ViewGroup?) :
             BViewHolder<RankItem>(inflater, parent, R.layout.item_select_single) {
 
-        override fun setContents(item: RankItem, isSelected: Boolean, payloads: MutableList<Any>?) {
-            if (payloads != null && payloads.isNotEmpty()) {
+        override fun setContents(item: RankItem, isSelected: Boolean, payload: Any?) {
+            if (payload != null) {
                 itemView.rbSelect.isChecked = isSelected
             } else {
                 itemView.ivIcon.setImageResource(R.mipmap.ic_launcher)

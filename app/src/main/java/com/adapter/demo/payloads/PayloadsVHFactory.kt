@@ -32,11 +32,9 @@ class PayloadsVHFactory : BViewHolderFactory() {
     private inner class RankItemVH(inflater: LayoutInflater, parent: ViewGroup?) :
             BViewHolder<RankItem>(inflater, parent, R.layout.item_payloads) {
 
-        override fun setContents(item: RankItem, isSelected: Boolean, payloads: MutableList<Any>?) {
-            if (payloads != null && payloads.isNotEmpty()) {
-                //payloads 的 size 总是1
-                val rank = payloads[0]
-                itemView.tvRank.text = rank.toString()
+        override fun setContents(item: RankItem, isSelected: Boolean, payload: Any?) {
+            if (payload != null) {
+                itemView.tvRank.text = payload.toString()
             } else {
                 itemView.ivIcon.setImageResource(R.mipmap.ic_launcher)
                 itemView.tvRank.text = item.rank.toString()

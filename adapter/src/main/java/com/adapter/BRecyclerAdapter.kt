@@ -105,6 +105,16 @@ class BRecyclerAdapter<T : Any>(
     }
 
     /**
+     * 移除选中项
+     */
+    fun removeSelections() {
+        if (selections.size > 0) {
+            selections.forEach { items.remove(it) }
+            selections.clear()
+        }
+    }
+
+    /**
      * 清空数据
      */
     fun clear() {
@@ -185,7 +195,25 @@ class BRecyclerAdapter<T : Any>(
     ) {
         val item = items[position]
         val itemInfo = getItemInfo(item.javaClass)
-        holder.setContents(item, itemInfo.selectable && selections.contains(item), payloads)
+
+        if (payloads.size == 0) {
+            holder.setContents(item, itemInfo.selectable && selections.contains(item))
+            return
+        }
+
+        //payloads 的 size 总是1
+        val payload = payloads[0]
+        if (payload is Int) {
+            if (payload == FLAG_PAYLOADS_SELECT) {
+                holder.setContents(item, true, payload)
+                return
+            }
+            if (payload == FLAG_PAYLOADS_DESELECT) {
+                holder.setContents(item, false, payload)
+                return
+            }
+        }
+        holder.setContents(item, itemInfo.selectable && selections.contains(item), payload)
     }
 
     private fun onItemClick(
