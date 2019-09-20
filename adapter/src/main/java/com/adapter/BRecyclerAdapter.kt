@@ -99,8 +99,24 @@ class BRecyclerAdapter<T : Any>(
      */
     fun remove(item: T) {
         items.remove(item)
-        if (selections.contains(item)) {
-            selections.remove(item)
+        selections.remove(item)
+    }
+
+    /**
+     * 移除指定数据类型数据
+     */
+    fun remove(itemType: Class<Any>) {
+        if (items.size == 0) {
+            return
+        }
+        //逆序查询删除
+        for (i in items.size - 1 downTo 0) {
+            val item = items[i]
+            if (item.javaClass == itemType) {
+                selections.remove(item)
+                items.removeAt(i)
+                notifyItemRemoved(i)
+            }
         }
     }
 
