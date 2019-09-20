@@ -22,6 +22,7 @@ data class RankItem(var icon: String, var rank: Int) {
 
     /**
      * 重写以下方法,避免 Set 存放相同值的对象
+     * 这里的重写并不严格，正式使用的话要注意唯一性，并且与 equals 方法结果一致
      */
     override fun hashCode(): Int {
         return this.rank

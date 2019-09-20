@@ -132,10 +132,11 @@ class BRecyclerAdapter<T : Any>(
 
     /**
      * 清空数据
+     * @param clearSelections 是否清空选中项,true:清空
      */
-    fun clear() {
+    fun clear(clearSelections: Boolean = true) {
         items.clear()
-        if (selections.size > 0) {
+        if (clearSelections && selections.size > 0) {
             selections.clear()
         }
     }
