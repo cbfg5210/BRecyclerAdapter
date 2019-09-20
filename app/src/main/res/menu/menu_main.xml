@@ -19,8 +19,11 @@
         android:title="Select - mix" />
     <item
         android:id="@+id/multiTypeSBDemo"
-        android:title="Select - multi-type single bean" />
+        android:title="Multi-type single bean" />
     <item
         android:id="@+id/multiTypeMBDemo"
-        android:title="Select - multi-type multi bean" />
+        android:title="Multi-type multi bean" />
+    <item
+        android:id="@+id/complexDemo"
+        android:title="Complex" />
 </menu>

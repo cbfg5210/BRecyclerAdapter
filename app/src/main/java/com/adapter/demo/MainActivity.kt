@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import com.adapter.demo.complex.ComplexFragment
 import com.adapter.demo.multi_type_multi_bean.MultiTypeMBFragment
 import com.adapter.demo.multi_type_single_bean.MultiTypeSBFragment
 import com.adapter.demo.payloads.PayloadsFragment
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         private const val FLAG_DEMO_SELECT_MIX = 5
         private const val FLAG_DEMO_MULTI_TYPE_SB = 6
         private const val FLAG_DEMO_MULTI_TYPE_MB = 7
+        private const val FLAG_DEMO_COMPLEX = 8
     }
 
     private var currentPageFlag: Int = -1
@@ -44,6 +46,7 @@ class MainActivity : AppCompatActivity() {
             FLAG_DEMO_SELECT_MIX -> MixSelectFragment()
             FLAG_DEMO_MULTI_TYPE_SB -> MultiTypeSBFragment()
             FLAG_DEMO_MULTI_TYPE_MB -> MultiTypeMBFragment()
+            FLAG_DEMO_COMPLEX -> ComplexFragment()
             else -> return
         }
 
@@ -68,6 +71,7 @@ class MainActivity : AppCompatActivity() {
             R.id.mixSelectDemo -> showFragment(FLAG_DEMO_SELECT_MIX)
             R.id.multiTypeSBDemo -> showFragment(FLAG_DEMO_MULTI_TYPE_SB)
             R.id.multiTypeMBDemo -> showFragment(FLAG_DEMO_MULTI_TYPE_MB)
+            R.id.complexDemo -> showFragment(FLAG_DEMO_COMPLEX)
         }
         return true
     }
