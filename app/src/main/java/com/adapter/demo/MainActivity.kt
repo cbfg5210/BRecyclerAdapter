@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.adapter.demo.complex.ComplexFragment
+import com.adapter.demo.diff.DiffFragment
 import com.adapter.demo.multi_type_multi_bean.MultiTypeMBFragment
 import com.adapter.demo.multi_type_single_bean.MultiTypeSBFragment
 import com.adapter.demo.payloads.PayloadsFragment
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
         private const val FLAG_DEMO_MULTI_TYPE_SB = 6
         private const val FLAG_DEMO_MULTI_TYPE_MB = 7
         private const val FLAG_DEMO_COMPLEX = 8
+        private const val FLAG_DEMO_DIFF = 9
     }
 
     private var currentPageFlag: Int = -1
@@ -84,6 +86,11 @@ class MainActivity : AppCompatActivity() {
                 tbTitleBar.subtitle = ""
                 ComplexFragment()
             }
+            FLAG_DEMO_DIFF -> {
+                title = "DiffUtil 优化数据更新 demo"
+                tbTitleBar.subtitle = ""
+                DiffFragment()
+            }
             else -> return
         }
 
@@ -109,6 +116,7 @@ class MainActivity : AppCompatActivity() {
             R.id.multiTypeSBDemo -> showFragment(FLAG_DEMO_MULTI_TYPE_SB)
             R.id.multiTypeMBDemo -> showFragment(FLAG_DEMO_MULTI_TYPE_MB)
             R.id.complexDemo -> showFragment(FLAG_DEMO_COMPLEX)
+            R.id.diffDemo -> showFragment(FLAG_DEMO_DIFF)
         }
         return true
     }

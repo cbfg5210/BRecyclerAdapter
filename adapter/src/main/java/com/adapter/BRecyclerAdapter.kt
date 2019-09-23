@@ -1,6 +1,8 @@
 package com.adapter
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +12,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class BRecyclerAdapter<T : Any>(
-        context: Context,
+        private val context: Context,
         private val viewHolderFactory: BViewHolderFactory
 ) : RecyclerView.Adapter<BViewHolder<Any>>() {
     companion object {
@@ -71,13 +73,26 @@ class BRecyclerAdapter<T : Any>(
     fun refreshItems(newItems: List<T>) {
         diffCallback.newData = newItems
 
-        /**
-         * todo : 使用协程
-         */
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
-        items.clear()
-        items.addAll(newItems)
-        diffResult.dispatchUpdatesTo(this)
+        AppExecutors.get()
+                .diskIO()
+                .execute {
+                    //val startTime = System.currentTimeMillis()
+                    val diffResult = DiffUtil.calculateDiff(diffCallback)
+                    //val endTime = System.currentTimeMillis()
+                    //Log.e("***", "calculateDiff cost time:${endTime - startTime}")
+
+                    if (!isContextValid()) {
+                        return@execute
+                    }
+
+                    AppExecutors.get()
+                            .mainThread()
+                            .execute {
+                                items.clear()
+                                items.addAll(newItems)
+                                diffResult.dispatchUpdatesTo(this)
+                            }
+                }
     }
 
     /**
@@ -166,8 +181,9 @@ class BRecyclerAdapter<T : Any>(
      * 比较内容是否完全一致
      * 内容不一致回调
      */
-    fun setBDiffCallback(bDiffCallback: BDiffCallback<T>) {
+    fun setBDiffCallback(bDiffCallback: BDiffCallback<T>): BRecyclerAdapter<T> {
         this.diffCallback = DiffUtilCallback(bDiffCallback)
+        return this
     }
 
     /**
@@ -332,12 +348,26 @@ class BRecyclerAdapter<T : Any>(
     }
 
     /**
+     * context 是否有效
+     */
+    private fun isContextValid(): Boolean {
+        var tempContext = context
+
+        while (tempContext is ContextWrapper) {
+            if (tempContext is Activity) {
+                return !tempContext.isFinishing
+            }
+            tempContext = tempContext.baseContext
+        }
+        return false
+    }
+
+    /**
      * 存储 Item 属性数据
      */
     private data class ItemInfo(var viewType: Int = 0,
                                 var selectable: Boolean = false,
                                 var multiSelectable: Boolean = false)
-
 
     /**
      * DiffUtil.Callback
@@ -355,6 +385,10 @@ class BRecyclerAdapter<T : Any>(
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             return bDiffCallback.areContentsTheSame(items[oldItemPosition], newData[newItemPosition])
+        }
+
+        override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+            return bDiffCallback.getChangePayload(items[oldItemPosition], newData[newItemPosition])
         }
     }
 }

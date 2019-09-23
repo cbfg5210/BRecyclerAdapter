@@ -42,10 +42,10 @@ interface BDiffCallback<T> {
      * <p>
      * Default implementation returns {@code null}.
      *
-     * @param oldItemPosition The position of the item in the old list
-     * @param newItemPosition The position of the item in the new list
+     * @param oldItem The item in the old list
+     * @param newItem The item in the new list
      *
      * @return A payload object that represents the change between the two items.
      */
-    fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any?
+    fun getChangePayload(oldItem: T, newItem: T): Any?
 }

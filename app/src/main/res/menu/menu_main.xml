@@ -26,4 +26,7 @@
     <item
         android:id="@+id/complexDemo"
         android:title="Complex" />
+    <item
+        android:id="@+id/diffDemo"
+        android:title="Diff" />
 </menu>
