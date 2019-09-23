@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.fragment_list.view.*
 
 class SimpleFragment : Fragment(), View.OnClickListener {
     private lateinit var adapter: BRecyclerAdapter<RankItem>
-    private var count: Int = 3
+    private var idCount: Int = 3
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -45,7 +45,7 @@ class SimpleFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View) {
         when (v.id) {
             R.id.btnTopAdd -> {
-                adapter.items.add(0, RankItem("", ++count))
+                adapter.items.add(0, RankItem(idCount, ++idCount))
                 adapter.notifyItemInserted(0)
             }
             R.id.btnTopRemove -> {
@@ -56,7 +56,7 @@ class SimpleFragment : Fragment(), View.OnClickListener {
             }
             R.id.btnBottomAdd -> {
                 val index = adapter.itemCount
-                adapter.items.add(index, RankItem("", ++count))
+                adapter.items.add(index, RankItem(idCount, ++idCount))
                 adapter.notifyItemInserted(index)
             }
             R.id.btnBottomRemove -> {
@@ -71,8 +71,8 @@ class SimpleFragment : Fragment(), View.OnClickListener {
 
     private fun getItems(): List<RankItem> {
         val items = ArrayList<RankItem>()
-        for (i in 1..count) {
-            items.add(RankItem("", i))
+        for (i in 1..idCount) {
+            items.add(RankItem(i, i))
         }
         return items
     }

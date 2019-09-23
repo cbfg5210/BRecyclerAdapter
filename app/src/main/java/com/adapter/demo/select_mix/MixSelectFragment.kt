@@ -101,7 +101,7 @@ class MixSelectFragment : Fragment() {
     private fun getItems(): List<RankItem> {
         val items = ArrayList<RankItem>()
         for (i in 1..26) {
-            items.add(RankItem("", i))
+            items.add(RankItem(i, i))
         }
         return items
     }
