@@ -36,5 +36,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:text="Item 局部刷新" />
+        android:text="Item 局部刷新"
+        android:textAllCaps="false" />
 </LinearLayout>
