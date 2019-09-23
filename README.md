@@ -85,3 +85,25 @@ class SimpleVHFactory : BViewHolderFactory() {
         //获取选中项
         adapter.selections  
 ```
+
+最后附上几个 Demo 截图：
+
+![capture_simple](https://github.com/cbfg5210/BRecyclerAdapter/blob/master/captures/capture_simple.png?raw=true)
+
+![capture_payload](https://github.com/cbfg5210/BRecyclerAdapter/blob/master/captures/capture_payload.png?raw=true)
+
+![capture_select_single](https://github.com/cbfg5210/BRecyclerAdapter/blob/master/captures/capture_select_single.png?raw=true)
+
+![capture_select_multi](https://github.com/cbfg5210/BRecyclerAdapter/blob/master/captures/capture_select_multi.png?raw=true)
+
+![capture_select_mix](https://github.com/cbfg5210/BRecyclerAdapter/blob/master/captures/capture_select_mix.png?raw=true)
+
+![capture_multi_type_single_bean](https://github.com/cbfg5210/BRecyclerAdapter/blob/master/captures/capture_multi_type_single_bean.png?raw=true)
+
+![capture_multi_type_multi_bean](https://github.com/cbfg5210/BRecyclerAdapter/blob/master/captures/capture_multi_type_multi_bean.png?raw=true)
+
+![capture_complex](https://github.com/cbfg5210/BRecyclerAdapter/blob/master/captures/capture_complex.png?raw=true)
+
+![capture_diff](https://github.com/cbfg5210/BRecyclerAdapter/blob/master/captures/capture_diff.png?raw=true)
+
+![capture_drag](https://github.com/cbfg5210/BRecyclerAdapter/blob/master/captures/capture_drag.png?raw=true)
