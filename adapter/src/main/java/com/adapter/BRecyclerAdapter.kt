@@ -1,8 +1,6 @@
 package com.adapter
 
-import android.app.Activity
 import android.content.Context
-import android.content.ContextWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,7 +66,7 @@ class BRecyclerAdapter<T : Any>(
     }
 
     /**
-     * 使用 DiffUtil 优化数据更新行为
+     * 使用 DiffUtil 刷新数据
      */
     fun refreshItems(newItems: List<T>) {
         diffCallback.newData = newItems
@@ -81,7 +79,7 @@ class BRecyclerAdapter<T : Any>(
                     //val endTime = System.currentTimeMillis()
                     //Log.e("***", "calculateDiff cost time:${endTime - startTime}")
 
-                    if (!isContextValid()) {
+                    if (!Utils.isContextValid(context)) {
                         return@execute
                     }
 
@@ -345,21 +343,6 @@ class BRecyclerAdapter<T : Any>(
     private fun getItemInfo(classType: Class<out Any>): ItemInfo {
         return itemInfoMap[classType]
                 ?: ItemInfo(itemInfoMap.size).apply { itemInfoMap[classType] = this }
-    }
-
-    /**
-     * context 是否有效
-     */
-    private fun isContextValid(): Boolean {
-        var tempContext = context
-
-        while (tempContext is ContextWrapper) {
-            if (tempContext is Activity) {
-                return !tempContext.isFinishing
-            }
-            tempContext = tempContext.baseContext
-        }
-        return false
     }
 
     /**
