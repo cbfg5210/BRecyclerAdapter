@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 import kotlin.collections.ArrayList
@@ -36,6 +37,8 @@ class BRecyclerAdapter<T : Any>(
     //记录调用 @see getItemViewType() 时的position
     private var itemPosition: Int = 0
 
+    private lateinit var diffCallback: DiffUtilCallback
+
     /**
      * 设置列表数据
      * @param mItems List<Any>?
@@ -60,6 +63,21 @@ class BRecyclerAdapter<T : Any>(
         }
 
         return this
+    }
+
+    /**
+     * 使用 DiffUtil 优化数据更新行为
+     */
+    fun refreshItems(newItems: List<T>) {
+        diffCallback.newData = newItems
+
+        /**
+         * todo : 使用协程
+         */
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        items.clear()
+        items.addAll(newItems)
+        diffResult.dispatchUpdatesTo(this)
     }
 
     /**
@@ -142,6 +160,14 @@ class BRecyclerAdapter<T : Any>(
         if (clearSelections && selections.size > 0) {
             selections.clear()
         }
+    }
+
+    /**
+     * 比较内容是否完全一致
+     * 内容不一致回调
+     */
+    fun setBDiffCallback(bDiffCallback: BDiffCallback<T>) {
+        this.diffCallback = DiffUtilCallback(bDiffCallback)
     }
 
     /**
@@ -311,4 +337,24 @@ class BRecyclerAdapter<T : Any>(
     private data class ItemInfo(var viewType: Int = 0,
                                 var selectable: Boolean = false,
                                 var multiSelectable: Boolean = false)
+
+
+    /**
+     * DiffUtil.Callback
+     */
+    private inner class DiffUtilCallback(private val bDiffCallback: BDiffCallback<T>) : DiffUtil.Callback() {
+        lateinit var newData: List<T>
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return items[oldItemPosition] == newData[newItemPosition]
+        }
+
+        override fun getOldListSize(): Int = items.size
+
+        override fun getNewListSize(): Int = newData.size
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return bDiffCallback.areContentsTheSame(items[oldItemPosition], newData[newItemPosition])
+        }
+    }
 }
