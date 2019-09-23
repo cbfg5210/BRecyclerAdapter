@@ -497,8 +497,6 @@ class BRecyclerAdapter<T : Any>(
             }
         }
 
-        override fun isLongPressDragEnabled(): Boolean {
-            return true
-        }
+        override fun isLongPressDragEnabled(): Boolean = true
     }
 }
