@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.adapter.demo.complex.ComplexFragment
 import com.adapter.demo.diff.DiffFragment
+import com.adapter.demo.drag.DragFragment
 import com.adapter.demo.multi_type_multi_bean.MultiTypeMBFragment
 import com.adapter.demo.multi_type_single_bean.MultiTypeSBFragment
 import com.adapter.demo.payloads.PayloadsFragment
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         private const val FLAG_DEMO_MULTI_TYPE_MB = 7
         private const val FLAG_DEMO_COMPLEX = 8
         private const val FLAG_DEMO_DIFF = 9
+        private const val FLAG_DEMO_DRAG = 10
     }
 
     private var currentPageFlag: Int = -1
@@ -53,7 +55,8 @@ class MainActivity : AppCompatActivity() {
             }
             FLAG_DEMO_PAYLOADS -> {
                 title = "Item 局部刷新 demo"
-                tbTitleBar.subtitle = "RecyclerView.Adapter.notifyItemChanged(int position, @Nullable Object payload)"
+                tbTitleBar.subtitle =
+                    "RecyclerView.Adapter.notifyItemChanged(int position, @Nullable Object payload)"
                 PayloadsFragment()
             }
             FLAG_DEMO_SELECT_SINGLE -> {
@@ -91,12 +94,17 @@ class MainActivity : AppCompatActivity() {
                 tbTitleBar.subtitle = ""
                 DiffFragment()
             }
+            FLAG_DEMO_DRAG -> {
+                title = "Item 拖拽 demo"
+                tbTitleBar.subtitle = ""
+                DragFragment()
+            }
             else -> return
         }
 
         supportFragmentManager.beginTransaction()
-                .replace(R.id.vbContainer, fragment)
-                .commit()
+            .replace(R.id.vbContainer, fragment)
+            .commit()
 
         currentPageFlag = flag
     }
@@ -117,6 +125,7 @@ class MainActivity : AppCompatActivity() {
             R.id.multiTypeMBDemo -> showFragment(FLAG_DEMO_MULTI_TYPE_MB)
             R.id.complexDemo -> showFragment(FLAG_DEMO_COMPLEX)
             R.id.diffDemo -> showFragment(FLAG_DEMO_DIFF)
+            R.id.dragDemo -> showFragment(FLAG_DEMO_DRAG)
         }
         return true
     }

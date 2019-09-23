@@ -29,4 +29,7 @@
     <item
         android:id="@+id/diffDemo"
         android:title="Diff" />
+    <item
+        android:id="@+id/dragDemo"
+        android:title="Drag" />
 </menu>

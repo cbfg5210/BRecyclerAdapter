@@ -14,29 +14,50 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btnTopAdd"
+            android:id="@+id/btnLinear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="添加到顶部" />
-
-
-        <Button
-            android:id="@+id/btnTopRemove"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="从顶部移除" />
+            android:layout_marginLeft="20dp"
+            android:text="LinearLayoutManager"
+            android:textAllCaps="false" />
 
         <Button
-            android:id="@+id/btnShuffle"
+            android:id="@+id/btnGrid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="所有项随机排序" />
+            android:layout_marginLeft="20dp"
+            android:text="GridLayoutManager"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btnUpdateAll"
+            android:id="@+id/btnEnableDrag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="所有项 Rank+1"
+            android:layout_marginLeft="20dp"
+            android:text="Enable drag"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btnDisableDrag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="Disable drag"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btnNotify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="notifyDataSetChanged"
             android:textAllCaps="false" />
     </LinearLayout>
 

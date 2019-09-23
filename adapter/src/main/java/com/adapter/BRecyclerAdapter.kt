@@ -4,7 +4,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 import kotlin.collections.ArrayList
@@ -37,7 +41,9 @@ class BRecyclerAdapter<T : Any>(
     //记录调用 @see getItemViewType() 时的position
     private var itemPosition: Int = 0
 
+    private lateinit var recyclerView: RecyclerView
     private lateinit var diffCallback: DiffUtilCallback
+    private var itemTouchHelper: ItemTouchHelper? = null
 
     /**
      * 设置列表数据
@@ -185,12 +191,56 @@ class BRecyclerAdapter<T : Any>(
     }
 
     /**
+     * 允许拖拽
+     */
+    fun enableDrag(classType: Class<out Any>, itemTouchCallback: ItemTouchHelper.Callback? = null): BRecyclerAdapter<T> {
+        getItemInfo(classType).apply { this.draggable = true }
+
+        if (itemTouchHelper == null) {
+            val callback = itemTouchCallback ?: ItemTouchHelperCallback()
+            itemTouchHelper = ItemTouchHelper(callback).apply { attachToRecyclerView(recyclerView) }
+        }
+
+        return this
+    }
+
+    /**
+     * 设置拖拽时的背景色
+     */
+    fun setDragBgColor(classType: Class<out Any>, @ColorInt normalBgColor: Int, @ColorInt dragBgColor: Int): BRecyclerAdapter<T> {
+        getItemInfo(classType).apply {
+            this.normalBgColor = normalBgColor
+            this.dragBgColor = dragBgColor
+        }
+        return this
+    }
+
+    /**
+     * 设置拖拽时的背景
+     */
+    fun setDragBgRes(classType: Class<out Any>, @DrawableRes normalBgRes: Int, @DrawableRes dragBgRes: Int): BRecyclerAdapter<T> {
+        getItemInfo(classType).apply {
+            this.normalBgRes = normalBgRes
+            this.dragBgRes = dragBgRes
+        }
+        return this
+    }
+
+    /**
+     * 禁止拖拽
+     */
+    fun disableDrag(classType: Class<out Any>) {
+        getItemInfo(classType).apply { this.draggable = false }
+    }
+
+    /**
      * 设置adapter给RecyclerView
      *
      * @param recyclerView
      * @return
      */
     fun bindRecyclerView(recyclerView: RecyclerView): BRecyclerAdapter<T> {
+        this.recyclerView = recyclerView
         recyclerView.adapter = this
         return this
     }
@@ -228,7 +278,14 @@ class BRecyclerAdapter<T : Any>(
 
         holder.setListeners(
                 View.OnClickListener { v -> onItemClick(holder, v, itemClickListener) },
-                View.OnLongClickListener { v -> onItemClick(holder, v, itemLongClickListener) }
+                View.OnLongClickListener { v ->
+                    itemTouchHelper?.run {
+                        if (getItemInfo(item.javaClass).draggable) {
+                            startDrag(holder)
+                        }
+                    }
+                    onItemClick(holder, v, itemLongClickListener)
+                }
         )
 
         return holder
@@ -350,7 +407,12 @@ class BRecyclerAdapter<T : Any>(
      */
     private data class ItemInfo(var viewType: Int = 0,
                                 var selectable: Boolean = false,
-                                var multiSelectable: Boolean = false)
+                                var multiSelectable: Boolean = false,
+                                var draggable: Boolean = false,
+                                @ColorInt var normalBgColor: Int = -1,
+                                @ColorInt var dragBgColor: Int = -1,
+                                @DrawableRes var normalBgRes: Int = 0,
+                                @DrawableRes var dragBgRes: Int = 0)
 
     /**
      * DiffUtil.Callback
@@ -372,6 +434,71 @@ class BRecyclerAdapter<T : Any>(
 
         override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
             return bDiffCallback.getChangePayload(items[oldItemPosition], newData[newItemPosition])
+        }
+    }
+
+    /**
+     * ItemTouchHelper.Callback
+     */
+    private inner class ItemTouchHelperCallback : ItemTouchHelper.Callback() {
+
+        override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+            if (!getItemInfo(items[viewHolder.adapterPosition].javaClass).draggable) {
+                return makeMovementFlags(0, 0
+                )
+            }
+
+            val dragFlags = if (recyclerView.layoutManager is GridLayoutManager) {
+                ItemTouchHelper.UP or
+                        ItemTouchHelper.DOWN or
+                        ItemTouchHelper.LEFT or
+                        ItemTouchHelper.RIGHT
+            } else {
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN
+            }
+            return makeMovementFlags(dragFlags, 0)
+        }
+
+        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+            val fromPosition = viewHolder.adapterPosition
+            val toPosition = target.adapterPosition
+            Collections.swap(items, fromPosition, toPosition)
+            notifyItemMoved(fromPosition, toPosition)
+            return true
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        }
+
+        override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+            super.onSelectedChanged(viewHolder, actionState)
+            if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
+                val position = viewHolder?.adapterPosition ?: return
+                val itemInfo = getItemInfo(items[position].javaClass)
+
+                if (itemInfo.dragBgColor != -1) {
+                    viewHolder.itemView.setBackgroundColor(itemInfo.dragBgColor)
+                } else if (itemInfo.dragBgRes != 0) {
+                    viewHolder.itemView.setBackgroundResource(itemInfo.dragBgRes)
+                }
+            }
+        }
+
+        override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+            super.clearView(recyclerView, viewHolder)
+
+            val position = viewHolder.adapterPosition
+            val itemInfo = getItemInfo(items[position].javaClass)
+
+            if (itemInfo.dragBgColor != -1) {
+                viewHolder.itemView.setBackgroundColor(itemInfo.normalBgColor)
+            } else if (itemInfo.dragBgRes != 0) {
+                viewHolder.itemView.setBackgroundResource(itemInfo.normalBgRes)
+            }
+        }
+
+        override fun isLongPressDragEnabled(): Boolean {
+            return true
         }
     }
 }
