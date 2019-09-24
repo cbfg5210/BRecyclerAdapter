@@ -1,7 +1,26 @@
 # BRecyclerAdapter
+[![](https://jitpack.io/v/cbfg5210/BRecyclerAdapter.svg)](https://jitpack.io/#cbfg5210/BRecyclerAdapter)
 
 最近抽空重新封装了一下 RecyclerView.Adapter，封装过程中学到了很多之前没有用到的知识。下面和大家分享一下封装后的使用方法，还望各位看官多多指点!
 
+## 引入依赖
+### Step 1. Add the JitPack repository to your build file
+```gradle
+allprojects {
+	repositories {
+	  ...
+	  maven { url 'https://jitpack.io' }
+    }
+}
+```
+### Step 2. Add the dependency
+```gradle
+dependencies {
+       implementation 'com.github.cbfg5210:BRecyclerAdapter:0.1'
+}
+```
+
+## 使用
 #### 实现 BViewHolderFactory 接口方法 createViewHolder : SimpleVHFactory.kt
 
 ```java
