@@ -16,20 +16,8 @@ import com.adapter.demo.select_single.SingleSelectFragment
 import com.adapter.demo.simple.SimpleFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
-    companion object {
-        private const val FLAG_DEMO_SIMPLE = 1
-        private const val FLAG_DEMO_PAYLOADS = 2
-        private const val FLAG_DEMO_SELECT_SINGLE = 3
-        private const val FLAG_DEMO_SELECT_MULTI = 4
-        private const val FLAG_DEMO_SELECT_MIX = 5
-        private const val FLAG_DEMO_MULTI_TYPE_SB = 6
-        private const val FLAG_DEMO_MULTI_TYPE_MB = 7
-        private const val FLAG_DEMO_COMPLEX = 8
-        private const val FLAG_DEMO_DIFF = 9
-        private const val FLAG_DEMO_DRAG = 10
-    }
 
+class MainActivity : AppCompatActivity() {
     private var currentPageFlag: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,64 +25,64 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(tbTitleBar)
 
-        showFragment(FLAG_DEMO_SIMPLE)
+        showFragment(R.id.simpleDemo)
     }
 
-    private fun showFragment(flag: Int) {
-        if (currentPageFlag == flag) {
+    private fun showFragment(id: Int) {
+        if (currentPageFlag == id) {
             return
         }
 
-        val fragment = when (flag) {
-            FLAG_DEMO_SIMPLE -> {
+        val fragment = when (id) {
+            R.id.simpleDemo -> {
                 //以下这句设置无效
                 //tbTitleBar.title= "最基础的一个 demo"
                 title = "最基础的一个 demo"
                 tbTitleBar.subtitle = "设置了点击和长按事件,可以添加/移除 Item"
                 SimpleFragment()
             }
-            FLAG_DEMO_PAYLOADS -> {
+            R.id.payloadsDemo -> {
                 title = "Item 局部刷新 demo"
                 tbTitleBar.subtitle =
-                    "RecyclerView.Adapter.notifyItemChanged(int position, @Nullable Object payload)"
+                        "RecyclerView.Adapter.notifyItemChanged(int position, @Nullable Object payload)"
                 PayloadsFragment()
             }
-            FLAG_DEMO_SELECT_SINGLE -> {
+            R.id.singleSelectDemo -> {
                 title = "单选 demo"
                 tbTitleBar.subtitle = ""
                 SingleSelectFragment()
             }
-            FLAG_DEMO_SELECT_MULTI -> {
+            R.id.multiSelectDemo -> {
                 title = "多选 demo"
                 tbTitleBar.subtitle = ""
                 MultiSelectFragment()
             }
-            FLAG_DEMO_SELECT_MIX -> {
+            R.id.mixSelectDemo -> {
                 title = "不可选/单选/多选 切换 demo"
                 tbTitleBar.subtitle = ""
                 MixSelectFragment()
             }
-            FLAG_DEMO_MULTI_TYPE_SB -> {
+            R.id.multiTypeSBDemo -> {
                 title = "同种数据类型多 ViewType demo"
                 tbTitleBar.subtitle = ""
                 MultiTypeSBFragment()
             }
-            FLAG_DEMO_MULTI_TYPE_MB -> {
+            R.id.multiTypeMBDemo -> {
                 title = "多数据类型多 ViewType demo"
                 tbTitleBar.subtitle = ""
                 MultiTypeMBFragment()
             }
-            FLAG_DEMO_COMPLEX -> {
+            R.id.complexDemo -> {
                 title = "复合 demo"
                 tbTitleBar.subtitle = ""
                 ComplexFragment()
             }
-            FLAG_DEMO_DIFF -> {
+            R.id.diffDemo -> {
                 title = "DiffUtil 优化数据更新 demo"
                 tbTitleBar.subtitle = ""
                 DiffFragment()
             }
-            FLAG_DEMO_DRAG -> {
+            R.id.dragDemo -> {
                 title = "Item 拖拽 demo"
                 tbTitleBar.subtitle = ""
                 DragFragment()
@@ -103,10 +91,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.vbContainer, fragment)
-            .commit()
+                .replace(R.id.vbContainer, fragment)
+                .commit()
 
-        currentPageFlag = flag
+        currentPageFlag = id
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -115,18 +103,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.simpleDemo -> showFragment(FLAG_DEMO_SIMPLE)
-            R.id.payloadsDemo -> showFragment(FLAG_DEMO_PAYLOADS)
-            R.id.singleSelectDemo -> showFragment(FLAG_DEMO_SELECT_SINGLE)
-            R.id.multiSelectDemo -> showFragment(FLAG_DEMO_SELECT_MULTI)
-            R.id.mixSelectDemo -> showFragment(FLAG_DEMO_SELECT_MIX)
-            R.id.multiTypeSBDemo -> showFragment(FLAG_DEMO_MULTI_TYPE_SB)
-            R.id.multiTypeMBDemo -> showFragment(FLAG_DEMO_MULTI_TYPE_MB)
-            R.id.complexDemo -> showFragment(FLAG_DEMO_COMPLEX)
-            R.id.diffDemo -> showFragment(FLAG_DEMO_DIFF)
-            R.id.dragDemo -> showFragment(FLAG_DEMO_DRAG)
-        }
+        showFragment(item.itemId)
         return true
     }
 }
