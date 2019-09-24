@@ -3,6 +3,7 @@ package com.adapter.demo
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import com.adapter.demo.complex.ComplexFragment
 import com.adapter.demo.diff.DiffFragment
@@ -14,17 +15,14 @@ import com.adapter.demo.select_mix.MixSelectFragment
 import com.adapter.demo.select_multi.MultiSelectFragment
 import com.adapter.demo.select_single.SingleSelectFragment
 import com.adapter.demo.simple.SimpleFragment
-import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
     private var currentPageFlag: Int = -1
+    private val tbTitleBar: ActionBar by lazy { supportActionBar!! }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(tbTitleBar)
-
         showFragment(R.id.simpleDemo)
     }
 
@@ -43,8 +41,7 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.payloadsDemo -> {
                 title = "Item 局部刷新 demo"
-                tbTitleBar.subtitle =
-                        "RecyclerView.Adapter.notifyItemChanged(int position, @Nullable Object payload)"
+                tbTitleBar.subtitle = "RecyclerView.Adapter.notifyItemChanged(int position, @Nullable Object payload)"
                 PayloadsFragment()
             }
             R.id.singleSelectDemo -> {
@@ -91,7 +88,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         supportFragmentManager.beginTransaction()
-                .replace(R.id.vbContainer, fragment)
+                .replace(android.R.id.content, fragment)
                 .commit()
 
         currentPageFlag = id
