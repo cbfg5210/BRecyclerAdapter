@@ -13,10 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 import kotlin.collections.ArrayList
 
-class BRecyclerAdapter<T : Any>(
-        private val context: Context,
-        private val viewHolderFactory: BViewHolderFactory
-) : RecyclerView.Adapter<BViewHolder<Any>>() {
+class BRecyclerAdapter<T : Any>(private val context: Context) :
+    RecyclerView.Adapter<BViewHolder<Any>>() {
     companion object {
         const val FLAG_PAYLOADS_SELECT = 10101
         const val FLAG_PAYLOADS_DESELECT = 10102
@@ -24,6 +22,8 @@ class BRecyclerAdapter<T : Any>(
         const val FLAG_SINGLE_SELECTABLE = 10104
         const val FLAG_MULTI_SELECTABLE = 10105
     }
+
+    private lateinit var vhFactory: BViewHolderFactory
 
     //保存列表项信息
     private val itemInfoMap = HashMap<Class<out Any>, ItemInfo>()
@@ -44,6 +44,18 @@ class BRecyclerAdapter<T : Any>(
     private lateinit var recyclerView: RecyclerView
     private lateinit var diffCallback: DiffUtilCallback
     private var itemTouchHelper: ItemTouchHelper? = null
+
+    constructor(context: Context, viewHolderFactory: BViewHolderFactory) : this(context) {
+        this.vhFactory = viewHolderFactory
+    }
+
+    /**
+     * 设置 BViewHolderFactory
+     */
+    fun setViewHolderFactory(vhFactory: BViewHolderFactory): BRecyclerAdapter<T> {
+        this.vhFactory = vhFactory
+        return this
+    }
 
     /**
      * 设置列表数据
@@ -78,25 +90,25 @@ class BRecyclerAdapter<T : Any>(
         diffCallback.newData = newItems
 
         AppExecutors.get()
-                .diskIO()
-                .execute {
-                    //val startTime = System.currentTimeMillis()
-                    val diffResult = DiffUtil.calculateDiff(diffCallback)
-                    //val endTime = System.currentTimeMillis()
-                    //Log.e("***", "calculateDiff cost time:${endTime - startTime}")
+            .diskIO()
+            .execute {
+                //val startTime = System.currentTimeMillis()
+                val diffResult = DiffUtil.calculateDiff(diffCallback)
+                //val endTime = System.currentTimeMillis()
+                //Log.e("***", "calculateDiff cost time:${endTime - startTime}")
 
-                    if (!Utils.isContextValid(context)) {
-                        return@execute
-                    }
-
-                    AppExecutors.get()
-                            .mainThread()
-                            .execute {
-                                items.clear()
-                                items.addAll(newItems)
-                                diffResult.dispatchUpdatesTo(this)
-                            }
+                if (!Utils.isContextValid(context)) {
+                    return@execute
                 }
+
+                AppExecutors.get()
+                    .mainThread()
+                    .execute {
+                        items.clear()
+                        items.addAll(newItems)
+                        diffResult.dispatchUpdatesTo(this)
+                    }
+            }
     }
 
     /**
@@ -105,6 +117,13 @@ class BRecyclerAdapter<T : Any>(
     fun addSelection(item: T): BRecyclerAdapter<T> {
         selections.add(item)
         return this
+    }
+
+    /**
+     * 添加默认选中项
+     */
+    fun addSelectionByIndex(itemIndex: Int): BRecyclerAdapter<T> {
+        return addSelection(items[itemIndex])
     }
 
     /**
@@ -193,7 +212,10 @@ class BRecyclerAdapter<T : Any>(
     /**
      * 允许拖拽
      */
-    fun enableDrag(classType: Class<out Any>, itemTouchCallback: ItemTouchHelper.Callback? = null): BRecyclerAdapter<T> {
+    fun enableDrag(
+        classType: Class<out Any>,
+        itemTouchCallback: ItemTouchHelper.Callback? = null
+    ): BRecyclerAdapter<T> {
         getItemInfo(classType).apply { this.draggable = true }
 
         if (itemTouchHelper == null) {
@@ -264,7 +286,11 @@ class BRecyclerAdapter<T : Any>(
     /**
      * 设置 Item 属性信息
      */
-    fun setItemInfo(classType: Class<out Any>, selectable: Boolean, multiSelectable: Boolean): BRecyclerAdapter<T> {
+    fun setItemInfo(
+        classType: Class<out Any>,
+        selectable: Boolean,
+        multiSelectable: Boolean
+    ): BRecyclerAdapter<T> {
         getItemInfo(classType).apply {
             this.selectable = selectable
             this.multiSelectable = multiSelectable
@@ -274,18 +300,19 @@ class BRecyclerAdapter<T : Any>(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BViewHolder<Any> {
         val item = items[itemPosition]
-        val holder = viewHolderFactory.createViewHolder(layoutInflater, parent, item) as BViewHolder<Any>
+        val holder =
+            vhFactory.createViewHolder(layoutInflater, parent, item) as BViewHolder<Any>
 
         holder.setListeners(
-                View.OnClickListener { v -> onItemClick(holder, v, itemClickListener) },
-                View.OnLongClickListener { v ->
-                    itemTouchHelper?.run {
-                        if (getItemInfo(item.javaClass).draggable) {
-                            startDrag(holder)
-                        }
+            View.OnClickListener { v -> onItemClick(holder, v, itemClickListener) },
+            View.OnLongClickListener { v ->
+                itemTouchHelper?.run {
+                    if (getItemInfo(item.javaClass).draggable) {
+                        startDrag(holder)
                     }
-                    onItemClick(holder, v, itemLongClickListener)
                 }
+                onItemClick(holder, v, itemLongClickListener)
+            }
         )
 
         return holder
@@ -295,7 +322,7 @@ class BRecyclerAdapter<T : Any>(
 
     override fun getItemViewType(position: Int): Int {
         itemPosition = position
-        val type = viewHolderFactory.getItemViewType(items[position])
+        val type = vhFactory.getItemViewType(items[position])
         return if (type != -1) type else getItemInfo(items[position].javaClass).viewType
     }
 
@@ -306,9 +333,9 @@ class BRecyclerAdapter<T : Any>(
     }
 
     override fun onBindViewHolder(
-            holder: BViewHolder<Any>,
-            position: Int,
-            payloads: MutableList<Any>
+        holder: BViewHolder<Any>,
+        position: Int,
+        payloads: MutableList<Any>
     ) {
         val item = items[position]
         val itemInfo = getItemInfo(item.javaClass)
@@ -334,9 +361,9 @@ class BRecyclerAdapter<T : Any>(
     }
 
     private fun onItemClick(
-            holder: BViewHolder<Any>,
-            v: View,
-            clicker: ((view: View, item: T, position: Int) -> Unit)?
+        holder: BViewHolder<Any>,
+        v: View,
+        clicker: ((view: View, item: T, position: Int) -> Unit)?
     ): Boolean {
         val position = holder.adapterPosition
 
@@ -399,25 +426,28 @@ class BRecyclerAdapter<T : Any>(
      */
     private fun getItemInfo(classType: Class<out Any>): ItemInfo {
         return itemInfoMap[classType]
-                ?: ItemInfo(itemInfoMap.size).apply { itemInfoMap[classType] = this }
+            ?: ItemInfo(itemInfoMap.size).apply { itemInfoMap[classType] = this }
     }
 
     /**
      * 存储 Item 属性数据
      */
-    private data class ItemInfo(var viewType: Int = 0,
-                                var selectable: Boolean = false,
-                                var multiSelectable: Boolean = false,
-                                var draggable: Boolean = false,
-                                @ColorInt var normalBgColor: Int = -1,
-                                @ColorInt var dragBgColor: Int = -1,
-                                @DrawableRes var normalBgRes: Int = 0,
-                                @DrawableRes var dragBgRes: Int = 0)
+    private data class ItemInfo(
+        var viewType: Int = 0,
+        var selectable: Boolean = false,
+        var multiSelectable: Boolean = false,
+        var draggable: Boolean = false,
+        @ColorInt var normalBgColor: Int = -1,
+        @ColorInt var dragBgColor: Int = -1,
+        @DrawableRes var normalBgRes: Int = 0,
+        @DrawableRes var dragBgRes: Int = 0
+    )
 
     /**
      * DiffUtil.Callback
      */
-    private inner class DiffUtilCallback(private val bDiffCallback: BDiffCallback<T>) : DiffUtil.Callback() {
+    private inner class DiffUtilCallback(private val bDiffCallback: BDiffCallback<T>) :
+        DiffUtil.Callback() {
         lateinit var newData: List<T>
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
@@ -429,7 +459,10 @@ class BRecyclerAdapter<T : Any>(
         override fun getNewListSize(): Int = newData.size
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return bDiffCallback.areContentsTheSame(items[oldItemPosition], newData[newItemPosition])
+            return bDiffCallback.areContentsTheSame(
+                items[oldItemPosition],
+                newData[newItemPosition]
+            )
         }
 
         override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
@@ -442,9 +475,13 @@ class BRecyclerAdapter<T : Any>(
      */
     private inner class ItemTouchHelperCallback : ItemTouchHelper.Callback() {
 
-        override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+        override fun getMovementFlags(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder
+        ): Int {
             if (!getItemInfo(items[viewHolder.adapterPosition].javaClass).draggable) {
-                return makeMovementFlags(0, 0
+                return makeMovementFlags(
+                    0, 0
                 )
             }
 
@@ -459,7 +496,11 @@ class BRecyclerAdapter<T : Any>(
             return makeMovementFlags(dragFlags, 0)
         }
 
-        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
             val fromPosition = viewHolder.adapterPosition
             val toPosition = target.adapterPosition
             Collections.swap(items, fromPosition, toPosition)
