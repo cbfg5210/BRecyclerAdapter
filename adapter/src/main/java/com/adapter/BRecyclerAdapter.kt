@@ -433,6 +433,21 @@ class BRecyclerAdapter<T : Any>(private val context: Context) :
     }
 
     /**
+     * 查询 Item 可选状态
+     */
+    fun getItemSelectableState(classType: Class<out Any>): Int {
+        val itemInfo = itemInfoMap[classType]
+
+        return if (itemInfo == null || !itemInfo.selectable) {
+            FLAG_UNSELECTABLE
+        } else if (itemInfo.multiSelectable) {
+            FLAG_MULTI_SELECTABLE
+        } else {
+            FLAG_SINGLE_SELECTABLE
+        }
+    }
+
+    /**
      * 存储 Item 属性数据
      */
     private data class ItemInfo(
