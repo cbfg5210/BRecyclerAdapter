@@ -115,6 +115,7 @@ class BRecyclerAdapter<T : Any>(private val context: Context) :
      * 添加默认选中项
      */
     fun addSelection(item: T): BRecyclerAdapter<T> {
+        require(items.size != 0) { "You should set items before invoking this function!" }
         selections.add(item)
         return this
     }
@@ -123,7 +124,9 @@ class BRecyclerAdapter<T : Any>(private val context: Context) :
      * 添加默认选中项
      */
     fun addSelectionByIndex(itemIndex: Int): BRecyclerAdapter<T> {
-        return addSelection(items[itemIndex])
+        require(items.size != 0) { "You should set items before invoking this function!" }
+        selections.add(items[itemIndex])
+        return this
     }
 
     /**
