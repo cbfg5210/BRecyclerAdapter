@@ -81,10 +81,7 @@ class BRecyclerAdapter<T : Any>(
         AppExecutors.get()
             .diskIO()
             .execute {
-                //val startTime = System.currentTimeMillis()
                 val diffResult = DiffUtil.calculateDiff(diffCallback)
-                //val endTime = System.currentTimeMillis()
-                //Log.e("***", "calculateDiff cost time:${endTime - startTime}")
 
                 if (!Utils.isContextValid(context)) {
                     return@execute
@@ -433,13 +430,10 @@ class BRecyclerAdapter<T : Any>(
      */
     fun getItemSelectableState(classType: Class<out Any>): Int {
         val itemInfo = itemInfoMap[classType]
-
-        return if (itemInfo == null || !itemInfo.selectable) {
-            FLAG_UNSELECTABLE
-        } else if (itemInfo.multiSelectable) {
-            FLAG_MULTI_SELECTABLE
-        } else {
-            FLAG_SINGLE_SELECTABLE
+        return when {
+            itemInfo == null || !itemInfo.selectable -> FLAG_UNSELECTABLE
+            itemInfo.multiSelectable -> FLAG_MULTI_SELECTABLE
+            else -> FLAG_SINGLE_SELECTABLE
         }
     }
 
@@ -494,11 +488,8 @@ class BRecyclerAdapter<T : Any>(
             viewHolder: RecyclerView.ViewHolder
         ): Int {
             if (!getItemInfo(items[viewHolder.adapterPosition].javaClass).draggable) {
-                return makeMovementFlags(
-                    0, 0
-                )
+                return makeMovementFlags(0, 0)
             }
-
             val dragFlags = if (recyclerView.layoutManager is GridLayoutManager) {
                 ItemTouchHelper.UP or
                         ItemTouchHelper.DOWN or
@@ -522,8 +513,7 @@ class BRecyclerAdapter<T : Any>(
             return true
         }
 
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        }
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
 
         override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
             super.onSelectedChanged(viewHolder, actionState)
