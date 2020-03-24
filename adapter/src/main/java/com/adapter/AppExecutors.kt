@@ -41,7 +41,6 @@ internal class AppExecutors private constructor() {
     }
 
     companion object {
-        @JvmStatic
         fun get() = SingletonHolder.INSTANCE
     }
 }
