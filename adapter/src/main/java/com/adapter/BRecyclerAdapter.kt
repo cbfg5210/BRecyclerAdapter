@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 import kotlin.collections.ArrayList
 
-class BRecyclerAdapter<T : Any>(private val context: Context) :
-    RecyclerView.Adapter<BViewHolder<Any>>() {
+class BRecyclerAdapter<T : Any>(
+    private val context: Context,
+    private val vhFactory: BViewHolderFactory
+) : RecyclerView.Adapter<BViewHolder<Any>>() {
     companion object {
         const val FLAG_PAYLOADS_SELECT = 10101
         const val FLAG_PAYLOADS_DESELECT = 10102
@@ -23,14 +25,13 @@ class BRecyclerAdapter<T : Any>(private val context: Context) :
         const val FLAG_MULTI_SELECTABLE = 10105
     }
 
-    private lateinit var vhFactory: BViewHolderFactory
-
     //保存列表项信息
     private val itemInfoMap = HashMap<Class<out Any>, ItemInfo>()
     private val layoutInflater = LayoutInflater.from(context)
 
     var items: MutableList<T> = ArrayList()
         private set
+
     //选中项列表
     val selections = ArrayList<T>()
 
@@ -44,18 +45,6 @@ class BRecyclerAdapter<T : Any>(private val context: Context) :
     private lateinit var recyclerView: RecyclerView
     private lateinit var diffCallback: DiffUtilCallback
     private var itemTouchHelper: ItemTouchHelper? = null
-
-    constructor(context: Context, viewHolderFactory: BViewHolderFactory) : this(context) {
-        this.vhFactory = viewHolderFactory
-    }
-
-    /**
-     * 设置 BViewHolderFactory
-     */
-    fun setViewHolderFactory(vhFactory: BViewHolderFactory): BRecyclerAdapter<T> {
-        this.vhFactory = vhFactory
-        return this
-    }
 
     /**
      * 设置列表数据
@@ -232,7 +221,11 @@ class BRecyclerAdapter<T : Any>(private val context: Context) :
     /**
      * 设置拖拽时的背景色
      */
-    fun setDragBgColor(classType: Class<out Any>, @ColorInt normalBgColor: Int, @ColorInt dragBgColor: Int): BRecyclerAdapter<T> {
+    fun setDragBgColor(
+        classType: Class<out Any>,
+        @ColorInt normalBgColor: Int,
+        @ColorInt dragBgColor: Int
+    ): BRecyclerAdapter<T> {
         getItemInfo(classType).apply {
             this.normalBgColor = normalBgColor
             this.dragBgColor = dragBgColor
@@ -243,7 +236,11 @@ class BRecyclerAdapter<T : Any>(private val context: Context) :
     /**
      * 设置拖拽时的背景
      */
-    fun setDragBgRes(classType: Class<out Any>, @DrawableRes normalBgRes: Int, @DrawableRes dragBgRes: Int): BRecyclerAdapter<T> {
+    fun setDragBgRes(
+        classType: Class<out Any>,
+        @DrawableRes normalBgRes: Int,
+        @DrawableRes dragBgRes: Int
+    ): BRecyclerAdapter<T> {
         getItemInfo(classType).apply {
             this.normalBgRes = normalBgRes
             this.dragBgRes = dragBgRes
@@ -303,8 +300,7 @@ class BRecyclerAdapter<T : Any>(private val context: Context) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BViewHolder<Any> {
         val item = items[itemPosition]
-        val holder =
-            vhFactory.createViewHolder(layoutInflater, parent, item) as BViewHolder<Any>
+        val holder = vhFactory.createViewHolder(layoutInflater, parent, item) as BViewHolder<Any>
 
         holder.setListeners(
             View.OnClickListener { v -> onItemClick(holder, v, itemClickListener) },
