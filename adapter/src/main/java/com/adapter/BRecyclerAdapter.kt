@@ -346,17 +346,14 @@ class BRecyclerAdapter<T : Any>(
 
         //payloads 的 size 总是1
         val payload = payloads[0]
-        if (payload is Int) {
-            if (payload == FLAG_PAYLOADS_SELECT) {
-                holder.setContents(item, true, payload)
-                return
-            }
-            if (payload == FLAG_PAYLOADS_DESELECT || payload == FLAG_UNSELECTABLE) {
-                holder.setContents(item, false, payload)
-                return
-            }
+
+        if (payload == FLAG_PAYLOADS_SELECT) {
+            holder.setContents(item, true, payload)
+        } else if (payload == FLAG_PAYLOADS_DESELECT || payload == FLAG_UNSELECTABLE) {
+            holder.setContents(item, false, payload)
+        } else {
+            holder.setContents(item, itemInfo.selectable && selections.contains(item), payload)
         }
-        holder.setContents(item, itemInfo.selectable && selections.contains(item), payload)
     }
 
     private fun onItemClick(
