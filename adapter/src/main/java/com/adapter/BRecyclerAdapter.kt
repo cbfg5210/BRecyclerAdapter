@@ -53,18 +53,20 @@ class BRecyclerAdapter<T : Any>(
      */
     fun setItems(mItems: List<T>?): BRecyclerAdapter<T> {
         items.clear()
-        mItems ?: return this
 
-        if (mItems.isNotEmpty()) {
-            items.addAll(mItems)
-            //如果有选中项,删除无效的选中项
-            if (selections.size > 0) {
-                val iterator = selections.iterator()
-                while (iterator.hasNext()) {
-                    val item = iterator.next()
-                    if (!items.contains(item)) {
-                        selections.remove(item)
-                    }
+        if (mItems.isNullOrEmpty()) {
+            return this
+        }
+
+        items.addAll(mItems)
+
+        //如果有选中项,删除无效的选中项
+        if (selections.size > 0) {
+            val iterator = selections.iterator()
+            while (iterator.hasNext()) {
+                val item = iterator.next()
+                if (!items.contains(item)) {
+                    selections.remove(item)
                 }
             }
         }
@@ -120,6 +122,7 @@ class BRecyclerAdapter<T : Any>(
      */
     fun selectAll() {
         if (items.size > 0) {
+            selections.clear()
             selections.addAll(items)
             notifyItemRangeChanged(0, items.size, FLAG_PAYLOADS_SELECT)
         }
