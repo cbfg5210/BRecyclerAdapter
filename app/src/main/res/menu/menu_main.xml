@@ -32,4 +32,7 @@
     <item
         android:id="@+id/dragDemo"
         android:title="Drag" />
+    <item
+        android:id="@+id/stateDemo"
+        android:title="State" />
 </menu>

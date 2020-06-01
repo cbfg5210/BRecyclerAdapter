@@ -1,11 +1,14 @@
 package com.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import androidx.annotation.IntRange
+import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -16,13 +19,21 @@ import kotlin.collections.ArrayList
 class BRecyclerAdapter<T : Any>(
     private val context: Context,
     private val vhFactory: BViewHolderFactory
-) : RecyclerView.Adapter<BViewHolder<Any>>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         const val FLAG_PAYLOADS_SELECT = 10101
         const val FLAG_PAYLOADS_DESELECT = 10102
         const val FLAG_UNSELECTABLE = 10103
         const val FLAG_SINGLE_SELECTABLE = 10104
         const val FLAG_MULTI_SELECTABLE = 10105
+
+        private const val VIEW_TYPE_EMPTY = 1003
+        private const val VIEW_TYPE_LOADING = 1004
+        private const val VIEW_TYPE_ERROR = 1005
+
+        const val STATE_LOADING = 1L
+        const val STATE_EMPTY = 2L
+        const val STATE_ERROR = 3L
     }
 
     //保存列表项信息
@@ -45,6 +56,16 @@ class BRecyclerAdapter<T : Any>(
     private lateinit var recyclerView: RecyclerView
     private lateinit var diffCallback: DiffUtilCallback
     private var itemTouchHelper: ItemTouchHelper? = null
+
+    private var isLoading = false
+    private var loadingLayoutRes = 0
+
+    private var emptyLayoutRes = 0
+    private var emptyClicker: (() -> Unit)? = null
+
+    private var isError = false
+    private var errorLayoutRes = 0
+    private var errorClicker: (() -> Unit)? = null
 
     /**
      * 设置列表数据
@@ -298,7 +319,63 @@ class BRecyclerAdapter<T : Any>(
         return this
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BViewHolder<Any> {
+    fun setEmptyLayout(
+        @LayoutRes layoutRes: Int,
+        emptyClicker: (() -> Unit)?
+    ): BRecyclerAdapter<T> {
+        this.emptyLayoutRes = layoutRes
+        this.emptyClicker = emptyClicker
+        return this
+    }
+
+    fun setErrorLayout(
+        @LayoutRes layoutRes: Int,
+        errorClicker: (() -> Unit)?
+    ): BRecyclerAdapter<T> {
+        this.errorLayoutRes = layoutRes
+        this.errorClicker = errorClicker
+        return this
+    }
+
+    fun setLoadingLayout(@LayoutRes layoutRes: Int): BRecyclerAdapter<T> {
+        this.loadingLayoutRes = layoutRes
+        return this
+    }
+
+    fun showStatePage(@IntRange(from = STATE_LOADING, to = STATE_ERROR) state: Long) {
+        when (state) {
+            STATE_LOADING -> {
+                this.isLoading = true
+                this.isError = false
+            }
+            STATE_EMPTY -> {
+                this.isLoading = false
+                this.isError = false
+            }
+            STATE_ERROR -> {
+                this.isLoading = false
+                this.isError = true
+            }
+        }
+        notifyDataSetChanged()
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        if (viewType == VIEW_TYPE_LOADING) {
+            val itemView = layoutInflater.inflate(loadingLayoutRes, parent, false)
+            return object : RecyclerView.ViewHolder(itemView) {}
+        }
+        if (viewType == VIEW_TYPE_EMPTY) {
+            val itemView = layoutInflater.inflate(emptyLayoutRes, parent, false)
+            itemView.setOnClickListener { emptyClicker?.invoke() }
+            return object : RecyclerView.ViewHolder(itemView) {}
+        }
+        if (viewType == VIEW_TYPE_ERROR) {
+            val itemView = layoutInflater.inflate(errorLayoutRes, parent, false)
+            itemView.setOnClickListener { errorClicker?.invoke() }
+            return object : RecyclerView.ViewHolder(itemView) {}
+        }
+
         val item = items[itemPosition]
         val holder = vhFactory.createViewHolder(layoutInflater, parent, item) as BViewHolder<Any>
 
@@ -317,25 +394,56 @@ class BRecyclerAdapter<T : Any>(
         return holder
     }
 
-    override fun getItemCount() = items.size
+    override fun getItemCount(): Int {
+        return if (items.isNotEmpty()) {
+            isLoading = false
+            isError = false
+            items.size
+        } else if (emptyLayoutRes != 0
+            || (isLoading && loadingLayoutRes != 0)
+            || (isError && errorLayoutRes != 0)
+        ) 1 else 0
+    }
+
+    /**
+     * 获取真正的数据数量
+     */
+    fun getRealItemCount() = items.size
 
     override fun getItemViewType(position: Int): Int {
         itemPosition = position
-        val type = vhFactory.getItemViewType(items[position])
-        return if (type != -1) type else getItemInfo(items[position].javaClass).viewType
+        return when {
+            items.isNotEmpty() -> {
+                val type = vhFactory.getItemViewType(items[position])
+                if (type != -1) type else getItemInfo(items[position].javaClass).viewType
+            }
+            isError && errorLayoutRes != 0 -> VIEW_TYPE_ERROR
+            isLoading && loadingLayoutRes != 0 -> VIEW_TYPE_LOADING
+            emptyLayoutRes != 0 && items.isEmpty() -> VIEW_TYPE_EMPTY
+            else -> -1
+        }
     }
 
-    override fun onBindViewHolder(holder: BViewHolder<Any>, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder !is BViewHolder<*>) {
+            return
+        }
+        holder as BViewHolder<T>
         val item = items[position]
         val itemInfo = getItemInfo(item.javaClass)
         holder.setContents(item, itemInfo.selectable && selections.contains(item))
     }
 
     override fun onBindViewHolder(
-        holder: BViewHolder<Any>,
+        holder: RecyclerView.ViewHolder,
         position: Int,
         payloads: MutableList<Any>
     ) {
+        if (holder !is BViewHolder<*>) {
+            return
+        }
+        holder as BViewHolder<T>
+
         val item = items[position]
         val itemInfo = getItemInfo(item.javaClass)
 

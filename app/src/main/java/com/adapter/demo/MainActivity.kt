@@ -15,6 +15,7 @@ import com.adapter.demo.select_mix.MixSelectFragment
 import com.adapter.demo.select_multi.MultiSelectFragment
 import com.adapter.demo.select_single.SingleSelectFragment
 import com.adapter.demo.simple.SimpleFragment
+import com.adapter.demo.state.StateFragment
 
 
 class MainActivity : AppCompatActivity() {
@@ -41,7 +42,8 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.payloadsDemo -> {
                 title = "Item 局部刷新 demo"
-                tbTitleBar.subtitle = "RecyclerView.Adapter.notifyItemChanged(int position, @Nullable Object payload)"
+                tbTitleBar.subtitle =
+                    "RecyclerView.Adapter.notifyItemChanged(int position, @Nullable Object payload)"
                 PayloadsFragment()
             }
             R.id.singleSelectDemo -> {
@@ -84,12 +86,17 @@ class MainActivity : AppCompatActivity() {
                 tbTitleBar.subtitle = ""
                 DragFragment()
             }
+            R.id.stateDemo -> {
+                title = "状态页 demo"
+                tbTitleBar.subtitle = ""
+                StateFragment()
+            }
             else -> return
         }
 
         supportFragmentManager.beginTransaction()
-                .replace(android.R.id.content, fragment)
-                .commit()
+            .replace(android.R.id.content, fragment)
+            .commit()
 
         currentPageFlag = id
     }
