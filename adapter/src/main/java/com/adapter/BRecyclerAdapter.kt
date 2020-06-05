@@ -414,7 +414,7 @@ class BRecyclerAdapter<T : Any>(
             }
             isError && errorLayoutRes != 0 -> VIEW_TYPE_ERROR
             isLoading && loadingLayoutRes != 0 -> VIEW_TYPE_LOADING
-            isEmpty && emptyLayoutRes != 0 && items.isEmpty() -> VIEW_TYPE_EMPTY
+            isEmpty && emptyLayoutRes != 0 -> VIEW_TYPE_EMPTY
             else -> -1
         }
     }
