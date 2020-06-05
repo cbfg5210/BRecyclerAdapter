@@ -1,7 +1,6 @@
 package com.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,8 +59,8 @@ class BRecyclerAdapter<T : Any>(
     private var isLoading = false
     private var loadingLayoutRes = 0
 
+    private var isEmpty = false
     private var emptyLayoutRes = 0
-    private var emptyClicker: (() -> Unit)? = null
 
     private var isError = false
     private var errorLayoutRes = 0
@@ -319,12 +318,8 @@ class BRecyclerAdapter<T : Any>(
         return this
     }
 
-    fun setEmptyLayout(
-        @LayoutRes layoutRes: Int,
-        emptyClicker: (() -> Unit)?
-    ): BRecyclerAdapter<T> {
+    fun setEmptyLayout(@LayoutRes layoutRes: Int): BRecyclerAdapter<T> {
         this.emptyLayoutRes = layoutRes
-        this.emptyClicker = emptyClicker
         return this
     }
 
@@ -349,6 +344,7 @@ class BRecyclerAdapter<T : Any>(
                 this.isError = false
             }
             STATE_EMPTY -> {
+                this.isEmpty = true
                 this.isLoading = false
                 this.isError = false
             }
@@ -367,7 +363,6 @@ class BRecyclerAdapter<T : Any>(
         }
         if (viewType == VIEW_TYPE_EMPTY) {
             val itemView = layoutInflater.inflate(emptyLayoutRes, parent, false)
-            itemView.setOnClickListener { emptyClicker?.invoke() }
             return object : RecyclerView.ViewHolder(itemView) {}
         }
         if (viewType == VIEW_TYPE_ERROR) {
@@ -399,7 +394,7 @@ class BRecyclerAdapter<T : Any>(
             isLoading = false
             isError = false
             items.size
-        } else if (emptyLayoutRes != 0
+        } else if ((isEmpty && emptyLayoutRes != 0)
             || (isLoading && loadingLayoutRes != 0)
             || (isError && errorLayoutRes != 0)
         ) 1 else 0
@@ -419,7 +414,7 @@ class BRecyclerAdapter<T : Any>(
             }
             isError && errorLayoutRes != 0 -> VIEW_TYPE_ERROR
             isLoading && loadingLayoutRes != 0 -> VIEW_TYPE_LOADING
-            emptyLayoutRes != 0 && items.isEmpty() -> VIEW_TYPE_EMPTY
+            isEmpty && emptyLayoutRes != 0 && items.isEmpty() -> VIEW_TYPE_EMPTY
             else -> -1
         }
     }

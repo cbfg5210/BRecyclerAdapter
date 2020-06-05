@@ -39,13 +39,8 @@ class StateFragment : Fragment(), View.OnClickListener {
 
         adapter = BRecyclerAdapter<RankItem>(view.context, SimpleVHFactory())
             .bindRecyclerView(rvList)
-            .setEmptyLayout(R.layout.layout_state_empty) {
-                Toast.makeText(
-                    view.context,
-                    "Click empty layout!",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            .setLoadingLayout(R.layout.layout_state_loading)
+            .setEmptyLayout(R.layout.layout_state_empty)
             .setErrorLayout(R.layout.layout_state_error) {
                 Toast.makeText(
                     view.context,
@@ -53,7 +48,6 @@ class StateFragment : Fragment(), View.OnClickListener {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-            .setLoadingLayout(R.layout.layout_state_loading)
     }
 
     override fun onClick(v: View) {
